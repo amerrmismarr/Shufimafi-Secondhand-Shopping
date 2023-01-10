@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "120957833122",
+    "project_id": "dolabi-61032",
+    "storage_bucket": "dolabi-61032.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:120957833122:android:0132c9e292a119f911acfb",
+        "android_client_info": {
+          "package_name": "com.example.dolabi"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "120957833122-qd849t8lv04q591bpds3reb6pb6giv0m.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAsRceytD9JY5x1Mq9SAUab38UDC4wDCX4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "120957833122-qd849t8lv04q591bpds3reb6pb6giv0m.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
