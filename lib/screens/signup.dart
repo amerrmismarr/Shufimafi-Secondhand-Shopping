@@ -19,8 +19,7 @@ class SignUp extends StatefulWidget {
   State<SignUp> createState() => _SignUpState();
 }
 
-final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
 
 String pattern =
     r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
@@ -34,8 +33,8 @@ String? phoneNumber;
 
 class _SignUpState extends State<SignUp> {
   void validation() async {
-    final FormState? _form = _formKey.currentState;
-    if (!_form!.validate()) {
+    
+   
       try {
         UserCredential result = await FirebaseAuth.instance
             .createUserWithEmailAndPassword(email: email!, password: password!);
@@ -69,25 +68,24 @@ class _SignUpState extends State<SignUp> {
           ),
         );
       }
-    } else {
-      print('No');
-    }
+   
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: _scaffoldKey,
+      backgroundColor: Colors.white,
+
       resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: Form(
-          key: _formKey,
+    
           child: Container(
             child: Column(
               children: <Widget>[
                 Container(
                   width: double.infinity,
-                  height: 150,
+
                   //color: const Color.fromRGBO(131, 13, 65, 1),
                   child: Column(
                       mainAxisAlignment: MainAxisAlignment.end,
@@ -99,13 +97,12 @@ class _SignUpState extends State<SignUp> {
                                   Navigator.of(context).pop();
                                 },
                                 icon: Icon(Icons.close))),
-                        Text(
-                          'Register',
-                          style: TextStyle(
-                              //color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20),
-                        )
+                        Container(
+                            height: 200,
+                            width: 200,
+                            decoration: const BoxDecoration(
+                                image: DecorationImage(
+                                    image: AssetImage('images/logo.png')))),
                       ]),
                 ),
                 const SizedBox(
@@ -214,22 +211,22 @@ class _SignUpState extends State<SignUp> {
                               hintStyle: TextStyle(color: Colors.black),
                               border: OutlineInputBorder()),
                         ),
-                        MyButton(
-                          onPressed: () {
-                            validation();
-                            Navigator.of(context).pushReplacement(
-                                MaterialPageRoute(
-                                    builder: (context) => TabsWithScreens()));
-                            Fluttertoast.showToast(
-                                msg: 'Welcome,' + ' ' + username! + '!',
-                                toastLength: Toast.LENGTH_LONG,
-                                gravity: ToastGravity.CENTER,
-                                timeInSecForIosWeb: 2,
-                                backgroundColor: Colors.teal[200],
-                                textColor: Colors.white,
-                                fontSize: 16.0);
-                          },
-                          name: 'Register',
+                        Center(
+                          child: Container(
+                            width: 200,
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                  backgroundColor: mainColor),
+                              onPressed: () {
+                                validation();
+                                Navigator.of(context).pushReplacement(
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            TabsWithScreens()));
+                              },
+                              child: Text('Register'),
+                            ),
+                          ),
                         ),
                         ChangeScreen(
                           name: 'Login',

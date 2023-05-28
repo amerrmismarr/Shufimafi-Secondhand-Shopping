@@ -1,10 +1,11 @@
 import 'package:dolabi/screens/search.dart';
+import 'package:dolabi/screens/search_cupboard.dart';
 import 'package:dolabi/screens/search_with_filter.dart';
 import 'package:dolabi/screens/tabs_with_screens.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:vertical_tabs/vertical_tabs.dart';
+import 'package:vertical_tabs_flutter/vertical_tabs.dart';
 
 class DrawerWidget extends StatefulWidget {
   final void Function(String) onSearchResult;
@@ -52,7 +53,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
     return GestureDetector(
       onTap: () {
         Navigator.of(context).pushReplacement(MaterialPageRoute(
-            builder: (context) => SearchWithFilter(
+            builder: (context) => SearchCupboard(
                   searchText: title,
                 )));
       },
@@ -1132,7 +1133,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                           if (searchText != null) {
                             Navigator.of(context)
                                 .pushReplacement(MaterialPageRoute(
-                                    builder: (context) => Search(
+                                    builder: (context) => SearchWithFilter(
                                           searchText: searchText,
                                         )));
                           } else {

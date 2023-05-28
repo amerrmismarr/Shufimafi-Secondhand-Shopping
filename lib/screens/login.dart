@@ -65,6 +65,7 @@ class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       key: _scaffoldKey,
       body: Form(
         key: _formKey,
@@ -85,18 +86,17 @@ class _LoginState extends State<Login> {
                         },
                         icon: Icon(Icons.close))),
                 Container(
+                    height: 200,
+                    width: 200,
+                    decoration: const BoxDecoration(
+                        image: DecorationImage(
+                            image: AssetImage('images/logo.png')))),
+                Container(
                   height: 400,
                   width: double.infinity,
                   child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <Widget>[
-                        Text(
-                          'Login',
-                          style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: mainColor),
-                        ),
                         TextFormField(
                           onChanged: (value) {
                             setState(() {

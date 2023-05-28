@@ -12,7 +12,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
-import 'package:splashscreen/splashscreen.dart';
 
 import 'models.dart/app_user.dart';
 
@@ -59,14 +58,15 @@ class _MyAppState extends State<MyApp> {
           colorScheme:
               ColorScheme.fromSwatch().copyWith(primary: Colors.transparent),
         ),
-        home: SplashScreen(
+        home: /*SplashScreen(
             backgroundColor: Colors.white,
             seconds: 3,
             image: Image.asset('images/logo.png'),
             photoSize: 100,
             useLoader: true,
             loaderColor: const Color.fromARGB(255, 255, 115, 0),
-            navigateAfterSeconds: TabsWithScreens()),
+            navigateAfterSeconds: */
+            TabsWithScreens(),
       ),
     );
   }

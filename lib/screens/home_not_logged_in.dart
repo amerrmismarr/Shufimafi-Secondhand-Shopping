@@ -291,7 +291,7 @@ class _HomeNotLoggedInState extends State<HomeNotLoggedIn> {
                                   productId: products[index]['productId'])));
                     },
                     child: _buildFeaturedProduct(
-                        products[index]['name'],
+                        products[index]['brand'],
                         '1000',
                         products[index]['image'],
                         products[index]['productId'], []),

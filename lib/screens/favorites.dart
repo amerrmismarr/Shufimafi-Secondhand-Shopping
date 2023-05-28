@@ -240,6 +240,16 @@ class _FavoritesNotLoggedInState extends State<FavoritesNotLoggedIn> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        iconTheme: const IconThemeData(color: Colors.white),
+        backgroundColor: Colors.white,
+        elevation: 0.0,
+        centerTitle: true,
+        title: Text(
+          'Favorites',
+          style: TextStyle(color: mainColor),
+        ),
+      ),
       backgroundColor: Colors.white,
       body: Container(
         child: Column(

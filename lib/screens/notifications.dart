@@ -90,18 +90,6 @@ class _NotificationsState extends State<Notifications> {
           'Notifications',
           style: TextStyle(color: mainColor),
         ),
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back,
-          ),
-          onPressed: () {},
-        ),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.notifications_none),
-            onPressed: () {},
-          ),
-        ],
       ),
       body: FirebaseAuth.instance.currentUser != null
           ? StreamBuilder(
@@ -162,6 +150,12 @@ class _NotificationsState extends State<Notifications> {
                     decoration: const BoxDecoration(
                         image: DecorationImage(
                             image: AssetImage('images/logo.png')))),
+                Center(
+                  child: Text('Please log in'),
+                ),
+                SizedBox(
+                  height: 30,
+                ),
                 Container(
                   child: Center(
                     child: Container(

@@ -15,18 +15,17 @@ import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import '../models.dart/product.dart';
 import 'login.dart';
 
-class SearchWithFilter extends StatefulWidget {
+class SearchCupboard extends StatefulWidget {
   String? searchText;
-  SearchWithFilter({this.searchText});
+  SearchCupboard({this.searchText});
 
   @override
-  State<SearchWithFilter> createState() =>
-      _SearchWithFilterState(this.searchText);
+  State<SearchCupboard> createState() => _SearchCupboardState(this.searchText);
 }
 
-class _SearchWithFilterState extends State<SearchWithFilter> {
+class _SearchCupboardState extends State<SearchCupboard> {
   String? searchText;
-  _SearchWithFilterState(this.searchText);
+  _SearchCupboardState(this.searchText);
   Color mainColor = const Color.fromARGB(255, 255, 115, 0);
 
   String searchingText = ' ';
@@ -360,28 +359,10 @@ class _SearchWithFilterState extends State<SearchWithFilter> {
                           image: doc['image']))
                       .toList();
 
-                  List<Product> filteredProducts = [];
-
-                  productsList.forEach((product) {
-                    if (product.brand!
-                            .toLowerCase()
-                            .startsWith(searchingText.toLowerCase()) ||
-                        product.category!
-                            .toLowerCase()
-                            .startsWith(searchingText.toLowerCase()) ||
-                        product.name!
-                            .toLowerCase()
-                            .startsWith(searchingText.toLowerCase())) {
-                      filteredProducts.add(product);
-                    }
-                  });
-
-                  /*productsList
-                      .where((product) => (product.brand!.toLowerCase() +
-                              ' ' +
-                              product.category!.toLowerCase())
+                  List<Product> filteredProducts = productsList
+                      .where((product) => (product.category!.toLowerCase())
                           .startsWith(searchingText.toLowerCase()))
-                      .toList();*/
+                      .toList();
 
                   print(productsList);
 

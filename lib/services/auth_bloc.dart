@@ -34,6 +34,6 @@ class AuthBloc {
 
   logout() async {
     await _auth.signOut();
-    _user.sink.add(null);
+    _user.sink.add(null!);
   }
 }

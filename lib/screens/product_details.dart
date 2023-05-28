@@ -6,14 +6,23 @@ import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ProductDetails extends StatefulWidget {
   String? image;
   String? name;
   String? price;
   String? productId;
+  String? category;
+  String? brand;
 
-  ProductDetails({this.image, this.name, this.price, this.productId});
+  ProductDetails(
+      {this.image,
+      this.name,
+      this.price,
+      this.productId,
+      this.category,
+      this.brand});
 
   @override
   State<ProductDetails> createState() => _ProductDetailsState();
@@ -95,6 +104,7 @@ class _ProductScreenTopPartState extends State<ProductScreenTopPart> {
   String? productId;
 
   _ProductScreenTopPartState(this.image, this.productId);
+
   @override
   Widget build(BuildContext context) {
     CarouselController controller = CarouselController();
@@ -108,7 +118,7 @@ class _ProductScreenTopPartState extends State<ProductScreenTopPart> {
                 .snapshots(),
             builder: (context, AsyncSnapshot snapshot) {
               if (!snapshot.hasData) {
-                return Text('fuck');
+                return Text('No Image Available');
               }
               return CarouselSlider.builder(
                 carouselController: controller,
@@ -205,6 +215,96 @@ class _ProductScreenBottomPartState extends State<ProductScreenBottomPart> {
     });
   }
 
+  Widget _buildButton() {
+    return Container(
+      width: double.infinity,
+      height: screenAwareSize(120.0, context),
+      child: Stack(
+        alignment: Alignment.topCenter,
+        children: <Widget>[
+          Container(
+            margin: EdgeInsets.only(left: screenAwareSize(22.0, context)),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                SizedBox(
+                  height: screenAwareSize(10.0, context),
+                ),
+                Padding(
+                  padding: EdgeInsets.fromLTRB(0, 0, 30, 0),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(10.0),
+                    child: MaterialButton(
+                      color: const Color.fromARGB(255, 255, 115, 0),
+                      padding: EdgeInsets.symmetric(
+                        vertical: screenAwareSize(14.0, context),
+                      ),
+                      onPressed: () {
+                        launchUrl(Uri.parse('tel://0799512013'));
+                      },
+                      child: Align(
+                        alignment: Alignment.center,
+                        child: Padding(
+                          padding: EdgeInsets.only(
+                              left: screenAwareSize(0.0, context)),
+                          child: Text("Call Advertiser",
+                              textAlign: TextAlign.left,
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: screenAwareSize(15.0, context))),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 20,
+                )
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildFeature(String feature, String firebaseFeature) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        children: [
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Container(
+              child: Text(feature,
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 20,
+                      fontFamily: "Montserrat-SemiBold")),
+            ),
+          ),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Container(
+                child: Text(
+                  firebaseFeature,
+                  maxLines: 2,
+                  style: TextStyle(
+                      color: Colors.grey,
+                      fontSize: 15,
+                      fontFamily: "Montserrat-Medium"),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -222,296 +322,66 @@ class _ProductScreenBottomPartState extends State<ProductScreenBottomPart> {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                SizedBox(
-                  height: screenAwareSize(8.0, context),
-                ),
+                _buildFeature('Product Category', product['subCategory']),
                 Padding(
-                  padding:
-                      EdgeInsets.only(left: screenAwareSize(16.0, context)),
-                  child: Text(
-                    "Product Description",
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: screenAwareSize(15.0, context),
-                        fontFamily: "Montserrat-SemiBold"),
-                  ),
-                ),
-                SizedBox(
-                  height: screenAwareSize(8.0, context),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(
-                      left: screenAwareSize(26.0, context),
-                      right: screenAwareSize(18.0, context)),
-                  child: AnimatedCrossFade(
-                    firstChild: Text(
-                      product['description'],
-                      maxLines: 2,
-                      style: TextStyle(
-                          color: Colors.grey,
-                          fontSize: screenAwareSize(10.0, context),
-                          fontFamily: "Montserrat-Medium"),
-                    ),
-                    secondChild: Text(
-                      product['description'],
-                      style: TextStyle(
-                          color: Colors.grey,
-                          fontSize: screenAwareSize(10.0, context),
-                          fontFamily: "Montserrat-Medium"),
-                    ),
-                    crossFadeState: isExpanded
-                        ? CrossFadeState.showSecond
-                        : CrossFadeState.showFirst,
-                    duration: kThemeAnimationDuration,
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(
-                      left: screenAwareSize(26.0, context),
-                      right: screenAwareSize(18.0, context)),
-                  child: GestureDetector(
-                      onTap: _expand,
-                      child: product['description'].length > 100
-                          ? Text(isExpanded ? "less" : "more..",
-                              style: TextStyle(
-                                  color:
-                                      const Color.fromARGB(255, 255, 115, 0)))
-                          : Container()),
-                ),
-                SizedBox(
-                  height: screenAwareSize(12.0, context),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(
-                      left: screenAwareSize(15.0, context),
-                      right: screenAwareSize(75.0, context)),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Text("Size",
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    children: [
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          "Product Description",
                           style: TextStyle(
                               color: Colors.black,
-                              fontSize: screenAwareSize(15.0, context),
-                              fontFamily: "Montserrat-SemiBold")),
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  height: 8.0,
-                ),
-                Padding(
-                  padding: EdgeInsets.only(
-                      left: screenAwareSize(26.0, context),
-                      right: screenAwareSize(18.0, context)),
-                  child: Text(
-                    'Size',
-                    maxLines: 2,
-                    style: TextStyle(
-                        color: Colors.grey,
-                        fontSize: screenAwareSize(10.0, context),
-                        fontFamily: "Montserrat-Medium"),
-                  ),
-                ),
-                SizedBox(
-                  height: 8.0,
-                ),
-                Padding(
-                  padding: EdgeInsets.only(
-                      left: screenAwareSize(15.0, context),
-                      right: screenAwareSize(75.0, context)),
-                  child: Text("Color",
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: screenAwareSize(15.0, context),
-                          fontFamily: "Montserrat-SemiBold")),
-                ),
-                SizedBox(
-                  height: screenAwareSize(8.0, context),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(
-                      left: screenAwareSize(26.0, context),
-                      right: screenAwareSize(18.0, context)),
-                  child: Text(
-                    product['color'],
-                    maxLines: 2,
-                    style: TextStyle(
-                        color: Colors.grey,
-                        fontSize: screenAwareSize(10.0, context),
-                        fontFamily: "Montserrat-Medium"),
-                  ),
-                ),
-                SizedBox(
-                  height: screenAwareSize(8.0, context),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(
-                      left: screenAwareSize(15.0, context),
-                      right: screenAwareSize(75.0, context)),
-                  child: Text("Price",
-                      style: TextStyle(
-                          fontSize: screenAwareSize(15, context),
-                          color: Colors.black,
-                          fontFamily: "Montserrat-SemiBold")),
-                ),
-                SizedBox(
-                  height: screenAwareSize(8.0, context),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(
-                      left: screenAwareSize(26.0, context),
-                      right: screenAwareSize(18.0, context)),
-                  child: Text(
-                    'JOD' + ' ' + product['price'],
-                    maxLines: 2,
-                    style: TextStyle(
-                        color: Colors.grey,
-                        fontSize: screenAwareSize(10.0, context),
-                        fontFamily: "Montserrat-Medium"),
-                  ),
-                ),
-                Container(
-                  width: double.infinity,
-                  height: screenAwareSize(120.0, context),
-                  child: Stack(
-                    alignment: Alignment.topCenter,
-                    children: <Widget>[
-                      Container(
-                        margin: EdgeInsets.only(
-                            left: screenAwareSize(22.0, context)),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            SizedBox(
-                              height: screenAwareSize(10.0, context),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.fromLTRB(0, 0, 30, 0),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(10.0),
-                                child: MaterialButton(
-                                  color: const Color.fromARGB(255, 255, 115, 0),
-                                  padding: EdgeInsets.symmetric(
-                                    vertical: screenAwareSize(14.0, context),
-                                  ),
-                                  onPressed: () {},
-                                  child: Align(
-                                    alignment: Alignment.center,
-                                    child: Padding(
-                                      padding: EdgeInsets.only(
-                                          left: screenAwareSize(0.0, context)),
-                                      child: Text("Call Advertiser",
-                                          textAlign: TextAlign.left,
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: screenAwareSize(
-                                                  15.0, context))),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            SizedBox(
-                              height: 20,
-                            )
-                          ],
+                              fontSize: 20,
+                              fontFamily: "Montserrat-SemiBold"),
                         ),
                       ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: AnimatedCrossFade(
+                            firstChild: Text(
+                              product['description'],
+                              maxLines: 2,
+                              style: TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 15,
+                                  fontFamily: "Montserrat-Medium"),
+                            ),
+                            secondChild: Text(
+                              product['description'],
+                              style: TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: screenAwareSize(10.0, context),
+                                  fontFamily: "Montserrat-Medium"),
+                            ),
+                            crossFadeState: isExpanded
+                                ? CrossFadeState.showSecond
+                                : CrossFadeState.showFirst,
+                            duration: kThemeAnimationDuration,
+                          ),
+                        ),
+                      ),
+                      GestureDetector(
+                          onTap: _expand,
+                          child: product['description'].length > 100
+                              ? Text(isExpanded ? "less" : "more..",
+                                  style: TextStyle(
+                                      color: const Color.fromARGB(
+                                          255, 255, 115, 0)))
+                              : Container()),
                     ],
                   ),
-                )
+                ),
+                _buildFeature('Size', 'Size'),
+                _buildFeature('Color', product['color']),
+                _buildFeature('Price', product['price']),
+                _buildButton()
               ],
             );
           }),
     );
   }
-}
-
-Widget sizeItem(String size, bool isSelected, BuildContext context) {
-  return Padding(
-    padding: const EdgeInsets.only(left: 12.0),
-    child: Container(
-      width: screenAwareSize(30.0, context),
-      height: screenAwareSize(30.0, context),
-      decoration: BoxDecoration(
-          color: isSelected ? Color(0xFFFC3930) : Color(0xFF525663),
-          borderRadius: BorderRadius.circular(5.0),
-          boxShadow: [
-            BoxShadow(
-                color:
-                    isSelected ? Colors.black.withOpacity(.5) : Colors.black12,
-                offset: Offset(0.0, 10.0),
-                blurRadius: 10.0)
-          ]),
-      child: Center(
-        child: Text(size,
-            style:
-                TextStyle(color: Colors.white, fontFamily: "Montserrat-Bold")),
-      ),
-    ),
-  );
-}
-
-Widget colorItem(
-    Color color, bool isSelected, BuildContext context, VoidCallback _ontab) {
-  return GestureDetector(
-    onTap: _ontab,
-    child: Padding(
-      padding: EdgeInsets.only(left: screenAwareSize(10.0, context)),
-      child: Container(
-        width: screenAwareSize(30.0, context),
-        height: screenAwareSize(30.0, context),
-        decoration: BoxDecoration(
-            color: Colors.black,
-            borderRadius: BorderRadius.circular(5.0),
-            boxShadow: isSelected
-                ? [
-                    BoxShadow(
-                        color: Colors.black.withOpacity(.8),
-                        blurRadius: 10.0,
-                        offset: Offset(0.0, 10.0))
-                  ]
-                : []),
-        child: ClipPath(
-          clipper: MClipper(),
-          child: Container(
-            width: double.infinity,
-            height: double.infinity,
-            color: color,
-          ),
-        ),
-      ),
-    ),
-  );
-}
-
-class MClipper extends CustomClipper<Path> {
-  @override
-  Path getClip(Size size) {
-    var path = new Path();
-
-    path.lineTo(0.0, size.height);
-    path.lineTo(size.width * 0.2, size.height);
-    path.lineTo(size.width, size.height * 0.2);
-    path.lineTo(size.width, 0.0);
-    path.close();
-
-    return path;
-  }
-
-  @override
-  bool shouldReclip(CustomClipper<Path> oldClipper) {
-    return true;
-  }
-}
-
-Widget divider() {
-  return Padding(
-    padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
-    child: Container(
-      width: 0.8,
-      color: Colors.black,
-    ),
-  );
 }

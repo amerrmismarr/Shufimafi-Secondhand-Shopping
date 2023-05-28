@@ -11,8 +11,9 @@ import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
-import 'package:vertical_tabs/vertical_tabs.dart';
 import 'dart:convert';
+
+import 'package:vertical_tabs_flutter/vertical_tabs.dart';
 
 class Categories extends StatefulWidget {
   const Categories({Key? key}) : super(key: key);
