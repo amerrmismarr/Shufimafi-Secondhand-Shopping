@@ -1,7 +1,5 @@
 import 'package:dolabi/screens/login.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:shimmer/shimmer.dart';
 
 class ProductColors extends StatefulWidget {
@@ -70,6 +68,15 @@ class _ProductColorsState extends State<ProductColors> {
             _buildColor(Colors.pink, 'Pink'),
             _buildColor(Colors.black, 'Black'),
             _buildColor(Colors.purple, 'Purple'),
+            _buildColor(Color.fromARGB(255, 213, 236, 255), 'Icy Blue'),
+            _buildColor(Color.fromARGB(255, 0, 247, 255), 'Turquoise'),
+            _buildColor(Color.fromARGB(255, 70, 69, 69), 'Anthracite'),
+            _buildColor(Color.fromARGB(255, 197, 27, 112), 'Burgundy'),
+            _buildColor(const Color.fromARGB(255, 127, 197, 255), 'Sky Blue'),
+            _buildClor(Color.fromARGB(255, 136, 27, 27), 'Maroon'),
+            _buildColor(Color.fromARGB(255, 177, 255, 167), 'Mint'),
+            _buildColor(const Color.fromARGB(255, 255, 255, 255), 'White'),
+            _buildColor(Color.fromARGB(255, 255, 251, 231), 'Off White'),
             Shimmer.fromColors(
                 period: Duration(seconds: 3),
                 baseColor: Colors.brown,
