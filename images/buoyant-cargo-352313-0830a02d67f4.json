@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "buoyant-cargo-352313",
+  "private_key_id": "0830a02d67f4acdbd93d99eba9f3082725ee3f2f",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQC+aMFX3u2Tpv7S\n7lgfMeyXtsUcgJDHXcMxaDSus9llP3JpHejPVFTEsfc4TrZPF00sLRXlZbjq9t2J\nTHsG9JT5BDLt4VDiwCjBOFUExqHLaHex2pIiHc2d4Si6E57FvI1pOL9Ww+Fltdfq\nA3r9sNtuk4WtNhiu17tG23MqOXcgDDDK8ihPTZ+QZAIrl9yM1w7d5li17b07LeJM\n9Ss70m8bzVZ1h+FL+69uFC2yGXH//AnjNpFCf6t3pcjVWa/UZ3gnKyugqxD8eiTQ\nFuuk1iskU+sV0G4njbmKGTXc8UVt3TjRU+GLofwKFFbfcWF6q6JHiefJKObLh+OE\nhkdae9ZzAgMBAAECggEAEu1RzrzDq+otKWV00AED7h7GYCtteMvas8YSeo05HmXc\npxNIiZdt57FzDB9S4vDDhJEkvI1MgNqyMcwu7IWSa2Bd+aRsiGWmh3JkjRl7ir8j\nKsQ5w3dn8XootLpvjWNNQTjZWDQXaydUw5e9+YrDfS3f21Rlxrd+D7CPtZJJw58W\ns2AeyIyvSas1kftl8iLIpwbXLlMzKhPa8c0iWrW9aHMbDxQVDc79KZZRN1MULABF\nt5WPkmi4UItPripN6T5MAFs0N/JCjoH/D4eUOGPs2qbF12t0WCl3gE3LPbMfz+If\n/OrFyH4KLCxfAzl66fp3Fw/Ii7cggmWryRjEoPWEBQKBgQDfBpo1ZyFURA71HsJp\ntVYycIDG4YnHJz6hCJKSfFycrLX2RKTWFYd8+8F8Be1Vu3kRV5UXcwmlM0+sI62I\nFBLZBIhIA0aBIKPdmW3p3vOuyyVKvnahIKb2sbsyNdxM0A9YebHc1cXBfkv7/JLA\n00P6pCiSVr47LnC6Q8I/YtU7PwKBgQDaj6I7xsWZEpXhra1tb+hWlt/9u4oylZMQ\nPO9uSy1Gc2TPX9xgtSA9gXQBhLTiNAdajsN7L91Y1s+R9QInVjh5su03Y9fg9QY3\nv8gKrMmzC/VpBe9+BA9PJPIGRCMyObejqooKFWry4TFea08XCaHj5iaUovEOnxFg\nl5wix1RbzQKBgFmkp7srVsQuDu0Ljg07LAheHATUhrKb3ZqQfYmPnxICgakY8kBy\nquDbuGuHXlwFXKZR08V3IbtbIn0IYim+F81O+xAm8OHaIsNhdkJ4sO3jDXw7jic5\nnqKt0ZZe+8uMHX7se0dOTYx2nUgNv1buE/bcoMohP5k+E2Vq8trTeO21AoGBAIVW\nR1VMiNRAAGxz9m/ja80XsoMrXL5LfjLT2gZhmrd2QrQ4+UuOdKLRTSJ4AZpWv33B\nxwRqSRGfy3ZyEORKt52XSR0XrmYxVZ/BQpswmsS+sPNniZpJg8V29qhX/Vjw2VXh\n/uDz/BE8zU+bC980Iy3UBQl89q9C3+kb1Udqb86pAoGBAJ8AfdzuYYtvlFsa+kUs\ngBVHfh9tIgYC/phOJggcw68yaJcgTUVCuqoZFvPKL6mcaLngBrIvRz986+WmKPOG\ngphNcB4WCbGLBwCOeYT5//CrP5zGon6FVCYfHllGTAMwI7xrvQkSipckGL4khb+4\nOoafE+f+vjVIzs5TE6PUgvrx\n-----END PRIVATE KEY-----\n",
+  "client_email": "quran-app@buoyant-cargo-352313.iam.gserviceaccount.com",
+  "client_id": "116694544361263658301",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/quran-app%40buoyant-cargo-352313.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}

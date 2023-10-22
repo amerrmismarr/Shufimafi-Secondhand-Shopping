@@ -1,7 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dolabi/screens/login.dart';
-import 'package:dolabi/screens/product_details.dart';
+import 'package:dolabi/screens/product_details_not_logged_in.dart';
 import 'package:dolabi/screens/search_with_filter.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -236,16 +236,13 @@ class _HomeNotLoggedInState extends State<HomeNotLoggedIn> {
             child:
                 ListView(scrollDirection: Axis.horizontal, children: <Widget>[
               _buildCategory('dress_icon.png', 'Women', Colors.white),
-              _buildCategory('shoes_icon.png', 'Shoes', Colors.white),
-              _buildCategory('tie_icon.png', 'Ties', Colors.white),
-              _buildCategory('shirt.png', 'T-Shirts', Colors.white),
-              _buildCategory('watch_icon.png', 'Watches', Colors.white),
-              _buildCategory('shirt.png', 'Watches', Colors.white),
-              _buildCategory('watch_icon.png', 'Watches', Colors.white),
-              _buildCategory('shirt.png', 'Watches', Colors.white),
-              _buildCategory('watch_icon.png', 'Watches', Colors.white),
-              _buildCategory('shirt.png', 'Watches', Colors.white),
-              _buildCategory('watch_icon.png', 'Watches', Colors.white),
+              _buildCategory('shoes_icon.png', 'Kids', Colors.white),
+              _buildCategory('tie_icon.png', 'Men', Colors.white),
+              _buildCategory('cats_and_dogs_icon.png', 'Pets', Colors.white),
+              _buildCategory('books_icon.png', 'Books', Colors.white),
+              _buildCategory('household_icon.png', 'Household', Colors.white),
+              _buildCategory(
+                  'electronics_icon.png', 'Electronics', Colors.white),
             ]),
           ),
           Container(
@@ -284,7 +281,7 @@ class _HomeNotLoggedInState extends State<HomeNotLoggedIn> {
                           PageTransition(
                               duration: Duration(milliseconds: 1000),
                               type: PageTransitionType.fade,
-                              child: ProductDetails(
+                              child: ProductDetailsNotLoggedIn(
                                   image: products[index]['image'],
                                   name: products[index]['name'],
                                   price: '1999',

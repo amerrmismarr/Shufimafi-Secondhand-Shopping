@@ -8,6 +8,7 @@ import 'package:dolabi/screens/tabs_with_screens.dart';
 import 'package:dolabi/services/auth_bloc.dart';
 import 'package:dolabi/services/firestore_service.dart';
 import 'package:dolabi/services/local_notifications_service.dart';
+import 'package:easy_splash_screen/easy_splash_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -66,7 +67,13 @@ class _MyAppState extends State<MyApp> {
             useLoader: true,
             loaderColor: const Color.fromARGB(255, 255, 115, 0),
             navigateAfterSeconds: */
-            TabsWithScreens(),
+            EasySplashScreen(
+                logoWidth: 100,
+                loaderColor: mainColor,
+                durationInSeconds: 3,
+                backgroundColor: Colors.white,
+                logo: Image.asset('images/logo.png'),
+                navigator: TabsWithScreens()),
       ),
     );
   }

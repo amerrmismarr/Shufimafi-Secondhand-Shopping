@@ -1,7 +1,9 @@
 class Product {
   String? name;
   final String? description;
-  final String? category;
+  final String? mainCategory;
+  final String? middleCategory;
+  final String? subCategory;
   final String? brand;
   final String? condition;
   final String? color;
@@ -15,7 +17,9 @@ class Product {
   Product(
       {this.name,
       this.description,
-      this.category,
+      this.mainCategory,
+      this.middleCategory,
+      this.subCategory,
       this.brand,
       this.condition,
       this.color,
@@ -30,7 +34,9 @@ class Product {
     return {
       'name': name,
       'description': description,
-      'category': category,
+      'mainCategory': mainCategory,
+      'middleCategory': middleCategory,
+      'subCategory': subCategory,
       'brand': brand,
       'condition': condition,
       'color': color,
@@ -46,7 +52,9 @@ class Product {
   Product.fromFirestore(Map<String, dynamic> firestore)
       : name = firestore['title'],
         description = firestore['description'],
-        category = firestore['category'],
+        mainCategory = firestore['mainCategory'],
+        middleCategory = firestore['middleCategory'],
+        subCategory = firestore['subCategory'],
         brand = firestore['brand'],
         condition = firestore['condition'],
         color = firestore['color'],

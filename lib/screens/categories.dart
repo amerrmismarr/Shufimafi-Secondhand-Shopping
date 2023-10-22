@@ -1,17 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dolabi/models.dart/product.dart';
-import 'package:dolabi/screens/cart.dart';
-import 'package:dolabi/screens/new_product.dart';
-import 'package:dolabi/screens/product_details.dart';
-import 'package:dolabi/screens/products_list.dart';
-import 'package:dolabi/services/firestore_service.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:provider/provider.dart';
-import 'dart:convert';
 
 import 'package:vertical_tabs_flutter/vertical_tabs.dart';
 
@@ -23,13 +10,6 @@ class Categories extends StatefulWidget {
 }
 
 class _CategoriesState extends State<Categories> {
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-
-  bool homeColor = false;
-  bool cartColor = false;
-  bool aboutColor = false;
-  bool contactUsColor = false;
-
   bool _expanded = false;
   bool _expanded2 = false;
   bool _expanded3 = false;
@@ -37,8 +17,9 @@ class _CategoriesState extends State<Categories> {
   bool _expanded5 = false;
   bool _expanded6 = false;
   bool _expanded7 = false;
-
-  String searchText = 'Search';
+  bool _expanded8 = false;
+  bool _expanded9 = false;
+  bool _expanded10 = false;
 
   Color mainColor = const Color.fromARGB(255, 255, 115, 0);
 
@@ -59,7 +40,10 @@ class _CategoriesState extends State<Categories> {
           footer: Center(
             child: Text(
               subCategory,
-              style: TextStyle(fontSize: 10),
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 10,
+              ),
             ),
           ),
           child: _buildExpansionPanelImage(image)),
@@ -837,6 +821,980 @@ class _CategoriesState extends State<Categories> {
     ]);
   }
 
+  Widget _buildExpansionListHousehold(
+    String title,
+  ) {
+    return Column(children: [
+      Container(
+        margin: EdgeInsets.all(10),
+        child: ExpansionPanelList(
+          animationDuration: Duration(milliseconds: 250),
+          children: [
+            _buildExpansionPanelHouseholdStorage('Storage', _expanded),
+            _buildExpansionPanelHouseholdFurniture('Furniture', _expanded2),
+            _buildExpansionPanelHouseholdTextiles('Textiles', _expanded3),
+            _buildExpansionPanelHouseholdBedroom('Bedroom', _expanded4),
+            _buildExpansionPanelHouseholdCookware(
+                'Cookware & Tableware', _expanded5),
+            _buildExpansionPanelHouseholdLighting('Lighting', _expanded6),
+            _buildExpansionPanelHouseholdKitchen('Kitchen', _expanded7),
+            _buildExpansionPanelHouseholdPlants('Plants', _expanded8),
+          ],
+          dividerColor: Colors.grey[300],
+          expansionCallback: (panelIndex, isExpanded) {
+            setState(() {
+              if (panelIndex == 0) {
+                _expanded = !_expanded;
+                _expanded2 = false;
+                _expanded3 = false;
+                _expanded4 = false;
+                _expanded5 = false;
+                _expanded6 = false;
+                _expanded7 = false;
+                _expanded8 = false;
+              } else if (panelIndex == 1) {
+                _expanded = false;
+                _expanded2 = !_expanded2;
+                _expanded3 = false;
+                _expanded4 = false;
+                _expanded5 = false;
+                _expanded6 = false;
+                _expanded7 = false;
+                _expanded8 = false;
+              } else if (panelIndex == 2) {
+                _expanded = false;
+                _expanded2 = false;
+                _expanded3 = !_expanded3;
+                _expanded4 = false;
+                _expanded5 = false;
+                _expanded6 = false;
+                _expanded7 = false;
+                _expanded8 = false;
+              } else if (panelIndex == 3) {
+                _expanded = false;
+                _expanded2 = false;
+                _expanded3 = false;
+                _expanded4 = !_expanded4;
+                _expanded5 = false;
+                _expanded6 = false;
+                _expanded7 = false;
+                _expanded8 = false;
+              } else if (panelIndex == 4) {
+                _expanded = false;
+                _expanded2 = false;
+                _expanded3 = false;
+                _expanded4 = false;
+                _expanded5 = !_expanded5;
+                _expanded6 = false;
+                _expanded7 = false;
+                _expanded8 = false;
+              } else if (panelIndex == 5) {
+                _expanded = false;
+                _expanded2 = false;
+                _expanded3 = false;
+                _expanded4 = false;
+                _expanded5 = false;
+                _expanded6 = !_expanded6;
+                _expanded7 = false;
+                _expanded8 = false;
+              } else if (panelIndex == 6) {
+                _expanded = false;
+                _expanded2 = false;
+                _expanded3 = false;
+                _expanded4 = false;
+                _expanded5 = false;
+                _expanded6 = false;
+                _expanded7 = !_expanded7;
+                _expanded8 = false;
+              } else if (panelIndex == 7) {
+                _expanded = false;
+                _expanded2 = false;
+                _expanded3 = false;
+                _expanded4 = false;
+                _expanded5 = false;
+                _expanded6 = false;
+                _expanded7 = false;
+                _expanded8 = !_expanded8;
+              }
+            });
+          },
+        ),
+      ),
+    ]);
+  }
+
+  ExpansionPanel _buildExpansionPanelHouseholdStorage(
+      String title, bool expanded) {
+    return ExpansionPanel(
+      headerBuilder: (context, isExpanded) {
+        return ListTile(
+          title: Text(
+            title,
+            style: TextStyle(color: Colors.black, fontSize: 11),
+          ),
+        );
+      },
+      body: Column(
+        children: [
+          GridView.count(
+            childAspectRatio: 1.2,
+            shrinkWrap: true,
+            crossAxisCount: 3,
+            children: [
+              _buildGridTile('Household', title, 'Shelving Units',
+                  'bookcases_shelving_units.jpg'),
+              _buildGridTile('Household', title, 'Storage Systems',
+                  'storage_solution_systems.jpg'),
+              _buildGridTile('Household', title, 'Cabinets,Cupboards',
+                  'cabinets_cupboards.jpg'),
+              _buildGridTile('Household', title, 'TV & Media Furniture',
+                  'tv_media_furniture.jpg'),
+              _buildGridTile('Household', title, 'Drawer Units', 'drawers.jpg'),
+              _buildGridTile('Household', title, 'Wardrobes', 'wardrobes.jpg'),
+              _buildGridTile(
+                  'Household', title, 'Small Storage', 'small_storage.jpg'),
+              _buildGridTile('Household', title, 'Sideboards,Buffets',
+                  'sideboards_buffets.jpg'),
+              _buildGridTile('Household', title, 'Wall Organisation',
+                  'wall organisation.jpg'),
+              _buildGridTile(
+                  'Household', title, 'Clothes Racks', 'clothes_racks.jpg'),
+              _buildGridTile('Household', title, 'Trolleys', 'trolleys.jpg'),
+              _buildGridTile('Household', title, 'Bags', 'bags.jpg'),
+              _buildGridTile(
+                  'Household', title, 'Moving Supplies', 'moving_supplies.jpg'),
+              _buildGridTile(
+                  'Household', title, 'Wall Shelves', 'wall_shelves.jpg'),
+            ],
+          ),
+        ],
+      ),
+      isExpanded: expanded,
+      canTapOnHeader: true,
+    );
+  }
+
+  ExpansionPanel _buildExpansionPanelHouseholdFurniture(
+      String title, bool expanded) {
+    return ExpansionPanel(
+      headerBuilder: (context, isExpanded) {
+        return ListTile(
+          title: Text(
+            title,
+            style: TextStyle(color: Colors.black, fontSize: 11),
+          ),
+        );
+      },
+      body: Column(
+        children: [
+          GridView.count(
+            childAspectRatio: 1.2,
+            shrinkWrap: true,
+            crossAxisCount: 3,
+            children: [
+              _buildGridTile('Household', title, 'Sofas', 'sofas.jpg'),
+              _buildGridTile(
+                  'Household', title, 'Tables & Desks', 'tables_desks.jpg'),
+              _buildGridTile('Household', title, 'Chairs', 'chairs.jpg'),
+              _buildGridTile('Household', title, 'Gaming Furniture',
+                  'gaming_furniture.jpg'),
+              _buildGridTile(
+                  'Household', title, 'Furniture Sets', 'furniture_sets.jpg'),
+              _buildGridTile('Household', title, 'Children\'s Furniture',
+                  'children_furniture.jpg'),
+              _buildGridTile('Household', title, 'Nursery Furniture',
+                  'nursery_furniture.jpg'),
+              _buildGridTile(
+                  'Household', title, 'Chaise Longues', 'chaise_longues.jpg'),
+              _buildGridTile(
+                  'Household', title, 'Bar Furniture', 'bar_furniture.jpg'),
+              _buildGridTile(
+                  'Household', title, 'Cafe Furniture', 'cafe_furniture.jpg'),
+              _buildGridTile(
+                  'Household', title, 'Room Dividers', 'room_dividers.jpg'),
+              _buildGridTile('Household', title, 'Garden Furniture',
+                  'garden_furniture.jpg'),
+            ],
+          ),
+        ],
+      ),
+      isExpanded: expanded,
+      canTapOnHeader: true,
+    );
+  }
+
+  ExpansionPanel _buildExpansionPanelHouseholdTextiles(
+      String title, bool expanded) {
+    return ExpansionPanel(
+      headerBuilder: (context, isExpanded) {
+        return ListTile(
+          title: Text(
+            title,
+            style: TextStyle(color: Colors.black, fontSize: 11),
+          ),
+        );
+      },
+      body: Column(
+        children: [
+          GridView.count(
+            childAspectRatio: 1.2,
+            shrinkWrap: true,
+            crossAxisCount: 3,
+            children: [
+              _buildGridTile('Household', title, 'Curtains & Blinds',
+                  'curtains_blinds.jpg'),
+              _buildGridTile('Household', title, 'Cushions', 'cushions.jpg'),
+              _buildGridTile('Household', title, 'Blankets & Throws',
+                  'blankets_throws.jpg'),
+              _buildGridTile(
+                  'Household', title, 'Chair Pads', 'chair_pads.jpg'),
+              _buildGridTile(
+                  'Household', title, 'Bath Textiles', 'bath_textiles.jpg'),
+              _buildGridTile('Household', title, 'Rugs', 'rugs.jpg'),
+              _buildGridTile(
+                  'Household', title, 'Fabrics & Sewing', 'fabrics_sewing.jpg'),
+              _buildGridTile('Household', title, 'Kitchen Textiles',
+                  'kitchen_textiles.jpg'),
+              _buildGridTile('Household', title, 'Outdoor Cushions',
+                  'outdoor_cushions.jpg'),
+            ],
+          ),
+        ],
+      ),
+      isExpanded: expanded,
+      canTapOnHeader: true,
+    );
+  }
+
+  ExpansionPanel _buildExpansionPanelHouseholdBedroom(
+      String title, bool expanded) {
+    return ExpansionPanel(
+      headerBuilder: (context, isExpanded) {
+        return ListTile(
+          title: Text(
+            title,
+            style: TextStyle(color: Colors.black, fontSize: 11),
+          ),
+        );
+      },
+      body: Column(
+        children: [
+          GridView.count(
+            childAspectRatio: 1.2,
+            shrinkWrap: true,
+            crossAxisCount: 3,
+            children: [
+              _buildGridTile('Household', title, 'Beds', 'beds.jpg'),
+              _buildGridTile('Household', title, 'Bedding', 'bedding.jpg'),
+              _buildGridTile(
+                  'Household', title, 'Mattresses', 'mattresses.jpg'),
+              _buildGridTile(
+                  'Household', title, 'Bedside Tables', 'bedside_tables.jpg'),
+              _buildGridTile(
+                  'Household', title, 'Mattress Bases', 'mattress_bases.jpg'),
+              _buildGridTile(
+                  'Household', title, 'Headboards', 'headboards.jpg'),
+              _buildGridTile('Household', title, 'Under Bed Storage',
+                  'under_bed_storage.jpg'),
+              _buildGridTile('Household', title, 'Bed Slats', 'bed_slats.jpg'),
+              _buildGridTile('Household', title, 'Bed Legs', 'bed_legs.jpg'),
+            ],
+          ),
+        ],
+      ),
+      isExpanded: expanded,
+      canTapOnHeader: true,
+    );
+  }
+
+  ExpansionPanel _buildExpansionPanelHouseholdCookware(
+      String title, bool expanded) {
+    return ExpansionPanel(
+      headerBuilder: (context, isExpanded) {
+        return ListTile(
+          title: Text(
+            title,
+            style: TextStyle(color: Colors.black, fontSize: 11),
+          ),
+        );
+      },
+      body: Column(
+        children: [
+          GridView.count(
+            childAspectRatio: 1.2,
+            shrinkWrap: true,
+            crossAxisCount: 3,
+            children: [
+              _buildGridTile(
+                  'Household', title, 'Food Storage', 'food_storage.jpg'),
+              _buildGridTile(
+                  'Household', title, 'Dinnerware', 'dinnerware.jpg'),
+              _buildGridTile('Household', title, 'Serveware', 'serveware.jpg'),
+              _buildGridTile(
+                  'Household', title, 'Coffee & Tea', 'coffee_tea.jpg'),
+              _buildGridTile(
+                  'Household', title, 'Table Linen', 'table_linen.jpg'),
+              _buildGridTile('Household', title, 'Cookware', 'cookware.jpg'),
+              _buildGridTile(
+                  'Household', title, 'Glassware & Jugs', 'glassware_jugs.jpg'),
+              _buildGridTile('Household', title, 'Kitchen Utensils',
+                  'kitchen_utensils.jpg'),
+              _buildGridTile('Household', title, 'Dishwashing Accessories',
+                  'dishwashing_accessories.jpg'),
+              _buildGridTile('Household', title, 'Cutlery', 'cutlery.jpg'),
+              _buildGridTile('Household', title, 'Knives & Chopping Boards',
+                  'knives_chopping_boards.jpg'),
+              _buildGridTile('Household', title, 'Bakeware', 'bakeware.jpg'),
+              _buildGridTile(
+                  'Household', title, 'Napkin Holders', 'napkin_holders.jpg'),
+              _buildGridTile('Household', title, 'Children\'s Kitchenware',
+                  'children_kitchenware_tableware.jpg'),
+              _buildGridTile('Household', title, 'Picnic & On-the-go',
+                  'picnic_onthego.jpg'),
+            ],
+          ),
+        ],
+      ),
+      isExpanded: expanded,
+      canTapOnHeader: true,
+    );
+  }
+
+  ExpansionPanel _buildExpansionPanelHouseholdLighting(
+      String title, bool expanded) {
+    return ExpansionPanel(
+      headerBuilder: (context, isExpanded) {
+        return ListTile(
+          title: Text(
+            title,
+            style: TextStyle(color: Colors.black, fontSize: 11),
+          ),
+        );
+      },
+      body: Column(
+        children: [
+          GridView.count(
+            childAspectRatio: 1.2,
+            shrinkWrap: true,
+            crossAxisCount: 3,
+            children: [
+              _buildGridTile('Household', title, 'Lamps', 'lamps.jpg'),
+              _buildGridTile('Household', title, 'Decorative Lighting',
+                  'decorative_lighting.jpg'),
+              _buildGridTile('Household', title, 'Integrated Lighting',
+                  'integrated_lighting.jpg'),
+              _buildGridTile(
+                  'Household', title, 'Smart Lighting', 'smart_lighting.jpg'),
+              _buildGridTile('Household', title, 'Outdoor Lighting',
+                  'outdoor_lighting.jpg'),
+              _buildGridTile('Household', title, 'Bathroom Lighting',
+                  'bathroom_lighting.jpg'),
+              _buildGridTile(
+                  'Household', title, 'LED Light Bulbs', 'led_light_bulbs.jpg'),
+            ],
+          ),
+        ],
+      ),
+      isExpanded: expanded,
+      canTapOnHeader: true,
+    );
+  }
+
+  ExpansionPanel _buildExpansionPanelHouseholdKitchen(
+      String title, bool expanded) {
+    return ExpansionPanel(
+      headerBuilder: (context, isExpanded) {
+        return ListTile(
+          title: Text(
+            title,
+            style: TextStyle(color: Colors.black, fontSize: 11),
+          ),
+        );
+      },
+      body: Column(
+        children: [
+          GridView.count(
+            childAspectRatio: 1.2,
+            shrinkWrap: true,
+            crossAxisCount: 3,
+            children: [
+              _buildGridTile('Household', title, 'Kitchen Cabinets',
+                  'kitchen_cabinets.jpg'),
+              _buildGridTile(
+                  'Household', title, 'Kitchen Doors', 'kitchen_doors.jpg'),
+              _buildGridTile('Household', title, 'Kitchen Appliances',
+                  'kitchen_appliances.jpg'),
+              _buildGridTile('Household', title, 'Kitchen Worktops',
+                  'kitchen_worktops.jpg'),
+              _buildGridTile('Household', title, 'Kitchen Taps & Sinks',
+                  'kitchen_taps_sinks.jpg'),
+              _buildGridTile(
+                  'Household',
+                  title,
+                  'Kitchen Wall Storage & Organisers',
+                  'kitchen_wall_storage_organisers.jpg'),
+              _buildGridTile(
+                  'Household', title, 'Knobs & Handles', 'knobs_handles.jpg'),
+              _buildGridTile('Household', title, 'Kitchen Lighting',
+                  'kitchen_lighting.jpg'),
+              _buildGridTile(
+                  'Household',
+                  title,
+                  'Kitchen Splashbacks & Wall Panels',
+                  'kitchen_splashbacks_wall_panels.jpg'),
+              _buildGridTile(
+                  'Household', title, 'Kitchenettes', 'kitchenettes.jpg'),
+              _buildGridTile('Household', title, 'Pantry', 'pantry.jpg'),
+            ],
+          ),
+        ],
+      ),
+      isExpanded: expanded,
+      canTapOnHeader: true,
+    );
+  }
+
+  ExpansionPanel _buildExpansionPanelHouseholdPlants(
+      String title, bool expanded) {
+    return ExpansionPanel(
+      headerBuilder: (context, isExpanded) {
+        return ListTile(
+          title: Text(
+            title,
+            style: TextStyle(color: Colors.black, fontSize: 11),
+          ),
+        );
+      },
+      body: Column(
+        children: [
+          GridView.count(
+            childAspectRatio: 1.2,
+            shrinkWrap: true,
+            crossAxisCount: 3,
+            children: [
+              _buildGridTile(
+                  'Household', title, 'Plants & Flowers', 'plants_flowers.jpg'),
+              _buildGridTile('Household', title, 'Flower Pots & Planters',
+                  'flower_pots_planters.jpg'),
+              _buildGridTile('Household', title, 'Plant Stands & Movers',
+                  'plant_stands_movers.jpg'),
+              _buildGridTile('Household', title, 'Growing Accessories',
+                  'growing_accessories.jpg'),
+              _buildGridTile(
+                  'Household', title, 'Watering Cans', 'watering_cans.jpg'),
+            ],
+          ),
+        ],
+      ),
+      isExpanded: expanded,
+      canTapOnHeader: true,
+    );
+  }
+
+  Widget _buildExpansionListElectronics(
+    String title,
+  ) {
+    return Column(children: [
+      Container(
+        margin: EdgeInsets.all(10),
+        child: ExpansionPanelList(
+          animationDuration: Duration(milliseconds: 250),
+          children: [
+            _buildExpansionPanelElectronicsHouseholdAppliances(
+                'Household Appliances', _expanded),
+            _buildExpansionPanelElectronicsPhone(
+                'Phone,Tablet,Smartwatch', _expanded2),
+            _buildExpansionPanelElectronicsTV(
+                'TV, Audio, Game console', _expanded3),
+            _buildExpansionPanelElectronicsSmall(
+                'Small household appliances', _expanded4),
+            _buildExpansionPanelElectronicsComputing(
+                'Computing, Gamer', _expanded5),
+            _buildExpansionPanelElectronicsPhoto(
+                'Photo, Video, Optics', _expanded6),
+            _buildExpansionPanelElectronicsGarden(
+                'Garden, DIY, Car equipment', _expanded7),
+            _buildExpansionPanelElectronicsGame(
+                'Game, Sport, Leisure', _expanded8),
+            _buildExpansionPanelElectronicsAtHome('At home', _expanded9),
+            _buildExpansionPanelElectronicsBabyMama('Baby, Mom', _expanded10),
+          ],
+          dividerColor: Colors.grey[300],
+          expansionCallback: (panelIndex, isExpanded) {
+            setState(() {
+              if (panelIndex == 0) {
+                _expanded = !_expanded;
+                _expanded2 = false;
+                _expanded3 = false;
+                _expanded4 = false;
+                _expanded5 = false;
+                _expanded6 = false;
+                _expanded7 = false;
+                _expanded8 = false;
+                _expanded9 = false;
+                _expanded10 = false;
+              } else if (panelIndex == 1) {
+                _expanded = false;
+                _expanded2 = !_expanded2;
+                _expanded3 = false;
+                _expanded4 = false;
+                _expanded5 = false;
+                _expanded6 = false;
+                _expanded7 = false;
+                _expanded8 = false;
+                _expanded9 = false;
+                _expanded10 = false;
+              } else if (panelIndex == 2) {
+                _expanded = false;
+                _expanded2 = false;
+                _expanded3 = !_expanded3;
+                _expanded4 = false;
+                _expanded5 = false;
+                _expanded6 = false;
+                _expanded7 = false;
+                _expanded8 = false;
+                _expanded9 = false;
+                _expanded10 = false;
+              } else if (panelIndex == 3) {
+                _expanded = false;
+                _expanded2 = false;
+                _expanded3 = false;
+                _expanded4 = !_expanded4;
+                _expanded5 = false;
+                _expanded6 = false;
+                _expanded7 = false;
+                _expanded8 = false;
+                _expanded9 = false;
+                _expanded10 = false;
+              } else if (panelIndex == 4) {
+                _expanded = false;
+                _expanded2 = false;
+                _expanded3 = false;
+                _expanded4 = false;
+                _expanded5 = !_expanded5;
+                _expanded6 = false;
+                _expanded7 = false;
+                _expanded8 = false;
+                _expanded9 = false;
+                _expanded10 = false;
+              } else if (panelIndex == 5) {
+                _expanded = false;
+                _expanded2 = false;
+                _expanded3 = false;
+                _expanded4 = false;
+                _expanded5 = false;
+                _expanded6 = !_expanded6;
+                _expanded7 = false;
+                _expanded8 = false;
+                _expanded9 = false;
+                _expanded10 = false;
+              } else if (panelIndex == 6) {
+                _expanded = false;
+                _expanded2 = false;
+                _expanded3 = false;
+                _expanded4 = false;
+                _expanded5 = false;
+                _expanded6 = false;
+                _expanded7 = !_expanded7;
+                _expanded8 = false;
+                _expanded9 = false;
+                _expanded10 = false;
+              } else if (panelIndex == 7) {
+                _expanded = false;
+                _expanded2 = false;
+                _expanded3 = false;
+                _expanded4 = false;
+                _expanded5 = false;
+                _expanded6 = false;
+                _expanded7 = false;
+                _expanded8 = !_expanded8;
+                _expanded9 = false;
+                _expanded10 = false;
+              } else if (panelIndex == 8) {
+                _expanded = false;
+                _expanded2 = false;
+                _expanded3 = false;
+                _expanded4 = false;
+                _expanded5 = false;
+                _expanded6 = false;
+                _expanded7 = false;
+                _expanded8 = false;
+                _expanded9 = !_expanded9;
+                _expanded10 = false;
+              } else if (panelIndex == 9) {
+                _expanded = false;
+                _expanded2 = false;
+                _expanded3 = false;
+                _expanded4 = false;
+                _expanded5 = false;
+                _expanded6 = false;
+                _expanded7 = false;
+                _expanded8 = false;
+                _expanded9 = false;
+                _expanded10 = !_expanded10;
+              }
+            });
+          },
+        ),
+      ),
+    ]);
+  }
+
+  ExpansionPanel _buildExpansionPanelElectronicsHouseholdAppliances(
+      String title, bool expanded) {
+    return ExpansionPanel(
+      headerBuilder: (context, isExpanded) {
+        return ListTile(
+          title: Text(
+            title,
+            style: TextStyle(color: Colors.black, fontSize: 11),
+          ),
+        );
+      },
+      body: Column(
+        children: [
+          GridView.count(
+            childAspectRatio: 1.2,
+            shrinkWrap: true,
+            crossAxisCount: 3,
+            children: [
+              _buildGridTile('Electronics', title, 'Washing Machines',
+                  'washing_machines.jpg'),
+              _buildGridTile('Electronics', title, 'Dryers', 'dryers.jpg'),
+              _buildGridTile(
+                  'Electronics', title, 'Dishwashers', 'dishwashers.jpg'),
+              _buildGridTile(
+                  'Electronics', title, 'Refrigerators', 'refrigerators.jpg'),
+              _buildGridTile('Electronics', title, 'Freezers', 'freezers.jpg'),
+              _buildGridTile('Electronics', title, 'Stoves', 'stoves.jpg'),
+              _buildGridTile('Electronics', title, 'Built-in Devices',
+                  'built_in_devices.jpg'),
+            ],
+          ),
+        ],
+      ),
+      isExpanded: expanded,
+      canTapOnHeader: true,
+    );
+  }
+
+  ExpansionPanel _buildExpansionPanelElectronicsPhone(
+      String title, bool expanded) {
+    return ExpansionPanel(
+      headerBuilder: (context, isExpanded) {
+        return ListTile(
+          title: Text(
+            title,
+            style: TextStyle(color: Colors.black, fontSize: 11),
+          ),
+        );
+      },
+      body: Column(
+        children: [
+          GridView.count(
+            childAspectRatio: 1.2,
+            shrinkWrap: true,
+            crossAxisCount: 3,
+            children: [
+              _buildGridTile('Electronics', title, 'Phones', 'phones.jpg'),
+              _buildGridTile('Electronics', title, 'Smart Watch, Bracelet',
+                  'smart_watch_bracelet.jpg'),
+              _buildGridTile('Electronics', title, 'Tablets, E-Book Readers',
+                  'tablets_ebook_readers.jpg'),
+              _buildGridTile('Electronics', title, 'Accessories',
+                  'electronics_accessories.jpg'),
+            ],
+          ),
+        ],
+      ),
+      isExpanded: expanded,
+      canTapOnHeader: true,
+    );
+  }
+
+  ExpansionPanel _buildExpansionPanelElectronicsTV(
+      String title, bool expanded) {
+    return ExpansionPanel(
+      headerBuilder: (context, isExpanded) {
+        return ListTile(
+          title: Text(
+            title,
+            style: TextStyle(color: Colors.black, fontSize: 11),
+          ),
+        );
+      },
+      body: Column(
+        children: [
+          GridView.count(
+            childAspectRatio: 1.2,
+            shrinkWrap: true,
+            crossAxisCount: 3,
+            children: [
+              _buildGridTile('Electronics', title, 'Televisions',
+                  'televesions & accessories.jpg'),
+              _buildGridTile('Electronics', title, 'Audio', 'audio.jpg'),
+              _buildGridTile(
+                  'Electronics', title, 'Game Consoles', 'game_consoles.jpg'),
+            ],
+          ),
+        ],
+      ),
+      isExpanded: expanded,
+      canTapOnHeader: true,
+    );
+  }
+
+  ExpansionPanel _buildExpansionPanelElectronicsSmall(
+      String title, bool expanded) {
+    return ExpansionPanel(
+      headerBuilder: (context, isExpanded) {
+        return ListTile(
+          title: Text(
+            title,
+            style: TextStyle(color: Colors.black, fontSize: 11),
+          ),
+        );
+      },
+      body: Column(
+        children: [
+          GridView.count(
+            childAspectRatio: 1.2,
+            shrinkWrap: true,
+            crossAxisCount: 3,
+            children: [
+              _buildGridTile('Electronics', title, 'Coffee', 'coffee.jpg'),
+              _buildGridTile(
+                  'Electronics', title, 'Floor Care', 'floor_care.jpg'),
+              _buildGridTile('Electronics', title, 'Food Preparation',
+                  'food_preparation.jpg'),
+              _buildGridTile(
+                  'Electronics', title, 'Beauty Care', 'beauty_care.jpg'),
+              _buildGridTile(
+                  'Electronics', title, 'Baking Cooking', 'baking_cooking.jpg'),
+              _buildGridTile('Electronics', title, 'Microwave Ovens',
+                  'microwave_ovens.jpg'),
+              _buildGridTile(
+                  'Electronics', title, 'Oral Care', 'oral_care.jpg'),
+              _buildGridTile('Electronics', title, 'Health Preservation',
+                  'health_preservation.jpg'),
+              _buildGridTile(
+                  'Electronics', title, 'Clothes Care', 'clothes_care.jpg'),
+              _buildGridTile('Electronics', title, 'Air Conditioners',
+                  'air_conditioners.jpg'),
+              _buildGridTile(
+                  'Electronics', title, 'Soda Machines', 'soda_machines.jpg'),
+            ],
+          ),
+        ],
+      ),
+      isExpanded: expanded,
+      canTapOnHeader: true,
+    );
+  }
+
+  ExpansionPanel _buildExpansionPanelElectronicsComputing(
+      String title, bool expanded) {
+    return ExpansionPanel(
+      headerBuilder: (context, isExpanded) {
+        return ListTile(
+          title: Text(
+            title,
+            style: TextStyle(color: Colors.black, fontSize: 11),
+          ),
+        );
+      },
+      body: Column(
+        children: [
+          GridView.count(
+            childAspectRatio: 1.2,
+            shrinkWrap: true,
+            crossAxisCount: 3,
+            children: [
+              _buildGridTile('Electronics', title, 'Computer Technology',
+                  'computer_technology.jpg'),
+              _buildGridTile(
+                  'Electronics', title, 'Peripherals', 'peripherals.jpg'),
+              _buildGridTile('Electronics', title, 'Computer Accessories',
+                  'notebook_computer_accessories.jpg'),
+              _buildGridTile('Electronics', title, 'Home Automation',
+                  'home_automation.jpg'),
+            ],
+          ),
+        ],
+      ),
+      isExpanded: expanded,
+      canTapOnHeader: true,
+    );
+  }
+
+  ExpansionPanel _buildExpansionPanelElectronicsPhoto(
+      String title, bool expanded) {
+    return ExpansionPanel(
+      headerBuilder: (context, isExpanded) {
+        return ListTile(
+          title: Text(
+            title,
+            style: TextStyle(color: Colors.black, fontSize: 11),
+          ),
+        );
+      },
+      body: Column(
+        children: [
+          GridView.count(
+            childAspectRatio: 1.2,
+            shrinkWrap: true,
+            crossAxisCount: 3,
+            children: [
+              _buildGridTile('Electronics', title, 'Photo', 'photo.jpg'),
+              _buildGridTile('Electronics', title, 'Camera', 'camera.jpg'),
+              _buildGridTile('Electronics', title, 'Photo & Video Accessories',
+                  'photo_video_accessories.jpg'),
+              _buildGridTile('Electronics', title, 'Nature Observation',
+                  'nature_observation.jpg'),
+            ],
+          ),
+        ],
+      ),
+      isExpanded: expanded,
+      canTapOnHeader: true,
+    );
+  }
+
+  ExpansionPanel _buildExpansionPanelElectronicsGarden(
+      String title, bool expanded) {
+    return ExpansionPanel(
+      headerBuilder: (context, isExpanded) {
+        return ListTile(
+          title: Text(
+            title,
+            style: TextStyle(color: Colors.black, fontSize: 11),
+          ),
+        );
+      },
+      body: Column(
+        children: [
+          GridView.count(
+            childAspectRatio: 1.2,
+            shrinkWrap: true,
+            crossAxisCount: 3,
+            children: [
+              _buildGridTile(
+                  'Electronics', title, 'DIY Machines', 'diy_machines.jpg'),
+              _buildGridTile('Electronics', title, 'Tools, Measurement',
+                  'tools_storage_measurement.jpg'),
+              _buildGridTile('Electronics', title, 'Cleaning Machines',
+                  'cleaning_machines.jpg'),
+              _buildGridTile('Electronics', title, 'Garden Machines',
+                  'garden_machines.jpg'),
+              _buildGridTile(
+                  'Electronics', title, 'Garden Tools', 'garden_tools.jpg'),
+              _buildGridTile('Electronics', title, 'Water Technology',
+                  'water_technology.jpg'),
+              _buildGridTile('Electronics', title, 'Grill,Pool,Garden',
+                  'grill_pool_garden.jpg'),
+              _buildGridTile('Electronics', title, 'Vehicles & Accessories',
+                  'vehicles_accessories.jpg'),
+              _buildGridTile(
+                  'Electronics', title, 'Navigation', 'navigation.jpg'),
+            ],
+          ),
+        ],
+      ),
+      isExpanded: expanded,
+      canTapOnHeader: true,
+    );
+  }
+
+  ExpansionPanel _buildExpansionPanelElectronicsGame(
+      String title, bool expanded) {
+    return ExpansionPanel(
+      headerBuilder: (context, isExpanded) {
+        return ListTile(
+          title: Text(
+            title,
+            style: TextStyle(color: Colors.black, fontSize: 11),
+          ),
+        );
+      },
+      body: Column(
+        children: [
+          GridView.count(
+            childAspectRatio: 1.2,
+            shrinkWrap: true,
+            crossAxisCount: 3,
+            children: [
+              _buildGridTile('Electronics', title, 'Leisure Time, Sports',
+                  'leisure_time_sports.jpg'),
+              _buildGridTile('Electronics', title, 'Game', 'gaming.jpg'),
+            ],
+          ),
+        ],
+      ),
+      isExpanded: expanded,
+      canTapOnHeader: true,
+    );
+  }
+
+  ExpansionPanel _buildExpansionPanelElectronicsAtHome(
+      String title, bool expanded) {
+    return ExpansionPanel(
+      headerBuilder: (context, isExpanded) {
+        return ListTile(
+          title: Text(
+            title,
+            style: TextStyle(color: Colors.black, fontSize: 11),
+          ),
+        );
+      },
+      body: Column(
+        children: [
+          GridView.count(
+            childAspectRatio: 1.2,
+            shrinkWrap: true,
+            crossAxisCount: 3,
+            children: [
+              _buildGridTile(
+                  'Electronics', title, 'Home Products', 'home_products.jpg'),
+              _buildGridTile(
+                  'Electronics', title, 'Furnitures', 'furnitures.jpg'),
+              _buildGridTile('Electronics', title, 'Lighting', 'lighting.jpg'),
+            ],
+          ),
+        ],
+      ),
+      isExpanded: expanded,
+      canTapOnHeader: true,
+    );
+  }
+
+  ExpansionPanel _buildExpansionPanelElectronicsBabyMama(
+      String title, bool expanded) {
+    return ExpansionPanel(
+      headerBuilder: (context, isExpanded) {
+        return ListTile(
+          title: Text(
+            title,
+            style: TextStyle(color: Colors.black, fontSize: 11),
+          ),
+        );
+      },
+      body: Column(
+        children: [
+          GridView.count(
+            childAspectRatio: 1.2,
+            shrinkWrap: true,
+            crossAxisCount: 3,
+            children: [
+              _buildGridTile('Electronics', title, 'Baby Care', 'baby_mom.jpg'),
+            ],
+          ),
+        ],
+      ),
+      isExpanded: expanded,
+      canTapOnHeader: true,
+    );
+  }
+
   Widget _buildExpansionListPets(
     String title,
   ) {
@@ -1218,11 +2176,19 @@ class _CategoriesState extends State<Categories> {
               children: [_buildBooks('books', true)],
             ),
           ),
-          Container(
-            child: Center(child: Text('Household')),
+          SingleChildScrollView(
+            child: Column(
+              children: [
+                _buildExpansionListHousehold('Household'),
+              ],
+            ),
           ),
-          Container(
-            child: Center(child: Text('Electronics')),
+          SingleChildScrollView(
+            child: Column(
+              children: [
+                _buildExpansionListElectronics('Electronics'),
+              ],
+            ),
           ),
         ],
       ),

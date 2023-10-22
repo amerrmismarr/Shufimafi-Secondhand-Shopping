@@ -128,7 +128,8 @@ class _NotificationsState extends State<Notifications> {
                                 padding: const EdgeInsets.all(8.0),
                                 child: Align(
                                   alignment: Alignment.centerLeft,
-                                  child: Text(notifications[index]['username'] +
+                                  child: Text(notifications[index]
+                                          ['firstName'] +
                                       ' ' +
                                       notifications[index]['title']),
                                 ),

@@ -49,7 +49,7 @@ class _SellingInformationState extends State<SellingInformation> {
                               width: 80,
                               child: Center(
                                   child: Text(
-                                'Products sold',
+                                'Free Ads',
                                 textAlign: TextAlign.center,
                               ))),
                         ),
@@ -59,8 +59,9 @@ class _SellingInformationState extends State<SellingInformation> {
                               width: 80,
                               child: Center(
                                   child: Text(
-                                '-',
-                                style: TextStyle(fontSize: 30),
+                                '1000',
+                                style:
+                                    TextStyle(color: mainColor, fontSize: 15),
                                 textAlign: TextAlign.center,
                               ))),
                         )
@@ -80,7 +81,7 @@ class _SellingInformationState extends State<SellingInformation> {
                               width: 80,
                               child: Center(
                                   child: Text(
-                                'Products seen',
+                                'Premium Plan',
                                 textAlign: TextAlign.center,
                               ))),
                         ),
@@ -90,42 +91,14 @@ class _SellingInformationState extends State<SellingInformation> {
                               width: 80,
                               child: Center(
                                   child: Text(
-                                '-',
-                                style: TextStyle(fontSize: 30),
+                                'Unlimited',
+                                style:
+                                    TextStyle(color: mainColor, fontSize: 15),
                                 textAlign: TextAlign.center,
                               ))),
                         )
                       ],
                     ),
-                    Container(
-                      color: Colors.black,
-                      height: 100,
-                      width: 1,
-                    ),
-                    Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Container(
-                              height: 40,
-                              width: 80,
-                              child: Align(
-                                  alignment: Alignment.topCenter,
-                                  child: Text('Your  rating'))),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(8.0, 10, 8, 8),
-                          child: Container(
-                              width: 80,
-                              child: Center(
-                                  child: Text(
-                                '-',
-                                style: TextStyle(fontSize: 30),
-                                textAlign: TextAlign.center,
-                              ))),
-                        )
-                      ],
-                    )
                   ]),
             ),
             SizedBox(
@@ -145,7 +118,7 @@ class _SellingInformationState extends State<SellingInformation> {
                             PersistentNavBarNavigator.pushNewScreen(
                               context,
                               screen: NewProduct(),
-                              withNavBar: true,
+                              withNavBar: false,
                               pageTransitionAnimation:
                                   PageTransitionAnimation.slideUp,
                             );

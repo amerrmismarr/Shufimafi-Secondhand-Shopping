@@ -1,13 +1,12 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dolabi/screens/login.dart';
+import 'package:dolabi/screens/email_sender.dart';
 import 'package:dolabi/screens/product_details.dart';
 import 'package:dolabi/screens/search.dart';
+import 'package:dolabi/screens/search_with_filter.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'dart:convert';
@@ -17,7 +16,7 @@ import 'package:uuid/uuid.dart';
 import '../services/local_notifications_service.dart';
 
 class HomeLoggedIn extends StatefulWidget {
-  ScrollController? scrollController;
+  final ScrollController? scrollController;
   HomeLoggedIn({this.scrollController});
 
   @override
@@ -26,9 +25,13 @@ class HomeLoggedIn extends StatefulWidget {
 
 class _HomeLoggedInState extends State<HomeLoggedIn> {
   ScrollController? scrollController;
+
   _HomeLoggedInState(this.scrollController);
+
   Color mainColor = const Color.fromARGB(255, 255, 115, 0);
+
   String searchingText = 'Search.......';
+
   var uuid = Uuid();
 
   late String notificationId;
@@ -157,7 +160,7 @@ class _HomeLoggedInState extends State<HomeLoggedIn> {
                                 .doc(notificationId)
                                 .set({
                               'title': 'likes your product',
-                              'username': username,
+                              'firstName': username,
                               'image': image
                             });
                           },
@@ -176,7 +179,7 @@ class _HomeLoggedInState extends State<HomeLoggedIn> {
       onTap: () {
         PersistentNavBarNavigator.pushNewScreen(
           context,
-          screen: Search(
+          screen: SearchWithFilter(
             searchText: searchText,
           ),
           withNavBar: false,
@@ -218,8 +221,22 @@ class _HomeLoggedInState extends State<HomeLoggedIn> {
     FirebaseMessaging.onMessage.listen((event) {
       LocalNotificationService.display(event);
     });
-    // TODO: implement initState
+
+    if (FirebaseAuth.instance.currentUser != null) {
+      storeNotificationToken();
+    }
     super.initState();
+  }
+
+  storeNotificationToken() async {
+    String? token = await FirebaseMessaging.instance.getToken();
+    print(token);
+    FirebaseFirestore.instance
+        .collection('Users')
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .update(
+      {'Token': token},
+    );
   }
 
   @override
@@ -236,7 +253,7 @@ class _HomeLoggedInState extends State<HomeLoggedIn> {
               .snapshots(),
           builder: (context, AsyncSnapshot firstSnapshot) {
             if (!firstSnapshot.hasData) {
-              return CircularProgressIndicator();
+              return const CircularProgressIndicator();
             }
             List favorites = firstSnapshot.data!.get('favorites');
             return ListView(
@@ -282,14 +299,25 @@ class _HomeLoggedInState extends State<HomeLoggedIn> {
                                                   'images/advertise.png'),
                                               fit: BoxFit.fitHeight)),
                                     )
-                                  : Container(
-                                      width: double.infinity,
-                                      height: screenAwareSize(100, context),
-                                      decoration: BoxDecoration(
-                                          image: DecorationImage(
-                                              image: AssetImage(
-                                                  'images/donate.png'),
-                                              fit: BoxFit.fitHeight)),
+                                  : GestureDetector(
+                                      onTap: () {
+                                        PersistentNavBarNavigator.pushNewScreen(
+                                          context,
+                                          screen: EmailSender(),
+                                          withNavBar: false,
+                                          pageTransitionAnimation:
+                                              PageTransitionAnimation.slideUp,
+                                        );
+                                      },
+                                      child: Container(
+                                        width: double.infinity,
+                                        height: screenAwareSize(100, context),
+                                        decoration: BoxDecoration(
+                                            image: DecorationImage(
+                                                image: AssetImage(
+                                                    'images/donate.png'),
+                                                fit: BoxFit.fitHeight)),
+                                      ),
                                     ),
                         ));
                   },
@@ -309,20 +337,20 @@ class _HomeLoggedInState extends State<HomeLoggedIn> {
                 ),
                 Container(
                   height: 60,
-                  child: ListView(scrollDirection: Axis.horizontal, children: <
-                      Widget>[
-                    _buildCategory('dress_icon.png', 'Women', Colors.white),
-                    _buildCategory('shoes_icon.png', 'Shoes', Colors.white),
-                    _buildCategory('tie_icon.png', 'Ties', Colors.white),
-                    _buildCategory('shirt.png', 'T-Shirts', Colors.white),
-                    _buildCategory('watch_icon.png', 'Watches', Colors.white),
-                    _buildCategory('shirt.png', 'Watches', Colors.white),
-                    _buildCategory('watch_icon.png', 'Watches', Colors.white),
-                    _buildCategory('shirt.png', 'Watches', Colors.white),
-                    _buildCategory('watch_icon.png', 'Watches', Colors.white),
-                    _buildCategory('shirt.png', 'Watches', Colors.white),
-                    _buildCategory('watch_icon.png', 'Watches', Colors.white),
-                  ]),
+                  child: ListView(
+                      scrollDirection: Axis.horizontal,
+                      children: <Widget>[
+                        _buildCategory('dress_icon.png', 'Women', Colors.white),
+                        _buildCategory('shoes_icon.png', 'Kids', Colors.white),
+                        _buildCategory('tie_icon.png', 'Men', Colors.white),
+                        _buildCategory(
+                            'cats_and_dogs_icon.png', 'Pets', Colors.white),
+                        _buildCategory('books_icon.png', 'Books', Colors.white),
+                        _buildCategory(
+                            'household_icon.png', 'Household', Colors.white),
+                        _buildCategory('electronics_icon.png', 'Electronics',
+                            Colors.white),
+                      ]),
                 ),
                 Container(
                   height: 70,
@@ -380,7 +408,7 @@ class _HomeLoggedInState extends State<HomeLoggedIn> {
                               favorites,
                               token,
                               userId,
-                              firstSnapshot.data['Username']),
+                              firstSnapshot.data['firstName']),
                         );
                       },
                     );

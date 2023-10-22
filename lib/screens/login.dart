@@ -9,16 +9,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:form_validator/form_validator.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 
 class Login extends StatefulWidget {
-  const Login({Key? key}) : super(key: key);
-
   @override
   State<Login> createState() => _LoginState();
 }
 
-final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 String pattern =
     r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
 RegExp regExp = RegExp(pattern);
@@ -27,177 +25,174 @@ bool obserText = true;
 String? email;
 String? password;
 
-final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-
 Color mainColor = const Color.fromARGB(255, 255, 115, 0);
+
+GlobalKey<FormState> _formLI = GlobalKey<FormState>();
 
 class _LoginState extends State<Login> {
   void validation() async {
-    final FormState? _form = _formKey.currentState;
-    if (!_form!.validate()) {
-      try {
-        UserCredential result = await FirebaseAuth.instance
-            .signInWithEmailAndPassword(email: email!, password: password!);
-        print(result.user!.uid);
-      } on FirebaseAuthException catch (e) {
-        print(e.message.toString());
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(e.message!),
+    try {
+      UserCredential result = await FirebaseAuth.instance
+          .signInWithEmailAndPassword(email: email!, password: password!)
+          .whenComplete(() => Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (context) => TabsWithScreens())));
+      print(result.user!.uid);
+    } on FirebaseAuthException catch (e) {
+      print(e.message.toString());
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.message!),
+        ),
+      );
+    } catch (e) {
+      print(e.toString());
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            e.toString(),
+            textAlign: TextAlign.end,
           ),
-        );
-      } catch (e) {
-        print(e.toString());
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              e.toString(),
-              textAlign: TextAlign.end,
-            ),
-          ),
-        );
-      }
-    } else {
-      print('No');
+        ),
+      );
     }
+  }
+
+  void _validate() {
+    _formLI.currentState!.validate();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      key: _scaffoldKey,
+      appBar: AppBar(
+        elevation: 0.0,
+        backgroundColor: Colors.white,
+        actions: [
+          IconButton(
+              color: mainColor,
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              icon: Icon(Icons.close))
+        ],
+      ),
       body: Form(
-        key: _formKey,
+        key: _formLI,
         child: Container(
           margin: const EdgeInsets.symmetric(horizontal: 10),
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                SizedBox(
+          child: ListView(
+            children: <Widget>[
+              Container(
                   height: 200,
-                ),
-                Align(
-                    alignment: Alignment.centerRight,
-                    child: IconButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
+                  width: 200,
+                  decoration: const BoxDecoration(
+                      image: DecorationImage(
+                          image: AssetImage('images/logo.png')))),
+              Container(
+                height: 400,
+                width: double.infinity,
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      TextFormField(
+                        validator:
+                            ValidationBuilder().email().maxLength(50).build(),
+                        onChanged: (value) {
+                          setState(() {
+                            email = value;
+                            // print(email);
+                          });
                         },
-                        icon: Icon(Icons.close))),
-                Container(
-                    height: 200,
-                    width: 200,
-                    decoration: const BoxDecoration(
-                        image: DecorationImage(
-                            image: AssetImage('images/logo.png')))),
-                Container(
-                  height: 400,
-                  width: double.infinity,
-                  child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: <Widget>[
-                        TextFormField(
-                          onChanged: (value) {
-                            setState(() {
-                              email = value;
-                              // print(email);
-                            });
-                          },
-                          validator: (value) {
-                            if (value == null || value == '') {
-                              return 'Please fill email';
-                            } else if (!regExp.hasMatch(value)) {
-                              return 'Email is invalid';
-                            }
-
-                            return '';
-                          },
-                          decoration: const InputDecoration(
-                              border: OutlineInputBorder(),
-                              hintText: 'Email',
-                              hintStyle: TextStyle(color: Colors.black)),
-                        ),
-                        TextFormField(
-                          onChanged: (value) {
-                            setState(() {
-                              password = value;
-                              // print(email);
-                            });
-                          },
-                          obscureText: obserText,
-                          validator: (value) {
-                            if (value == '') {
-                              return 'Please fill password';
-                            } else if (value!.length < 8) {
-                              return 'Password is too short';
-                            }
-                            return '';
-                          },
-                          decoration: InputDecoration(
-                              border: OutlineInputBorder(),
-                              hintText: 'Password',
-                              suffixIcon: GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    FocusScope.of(context).unfocus();
-                                    obserText = !obserText;
-                                  });
-                                },
-                                child: Icon(
-                                  obserText == true
-                                      ? Icons.visibility
-                                      : Icons.visibility_off,
-                                  color: Colors.black,
-                                ),
-                              ),
-                              hintStyle: TextStyle(color: Colors.black)),
-                        ),
-                        Center(
-                          child: Container(
-                            width: 200,
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                  backgroundColor: mainColor),
-                              onPressed: () {
-                                validation();
-                                Navigator.of(context).pushReplacement(
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            TabsWithScreens()));
+                        scrollPadding: EdgeInsets.only(bottom: 40),
+                        decoration: const InputDecoration(
+                            labelText: "Email",
+                            labelStyle: TextStyle(color: Colors.black),
+                            hintStyle: TextStyle(color: Colors.black),
+                            focusedBorder: OutlineInputBorder(),
+                            border: OutlineInputBorder()),
+                      ),
+                      TextFormField(
+                        validator: ValidationBuilder()
+                            .minLength(8)
+                            .maxLength(50)
+                            .build(),
+                        onChanged: (value) {
+                          setState(() {
+                            password = value;
+                            // print(email);
+                          });
+                        },
+                        obscureText: obserText,
+                        scrollPadding: EdgeInsets.only(bottom: 40),
+                        decoration: InputDecoration(
+                            suffixIcon: GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  obserText = !obserText;
+                                });
+                                FocusScope.of(context).unfocus();
                               },
-                              child: Text('Log in'),
+                              child: Icon(
+                                obserText == true
+                                    ? Icons.visibility
+                                    : Icons.visibility_off,
+                                color: Colors.black,
+                              ),
                             ),
+                            labelText: "Password",
+                            labelStyle: TextStyle(color: Colors.black),
+                            hintStyle: TextStyle(color: Colors.black),
+                            focusedBorder: OutlineInputBorder(),
+                            border: OutlineInputBorder()),
+                      ),
+                      Center(
+                        child: Container(
+                          width: 200,
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor: mainColor),
+                            onPressed: () {
+                              _validate();
+                              if (_formLI.currentState!.validate()) {
+                                validation();
+                              }
+                              // validation();
+                              // Navigator.of(context).pushReplacement(
+                              //     MaterialPageRoute(
+                              //         builder: (context) => TabsWithScreens()));
+                            },
+                            child: Text('Log in'),
                           ),
                         ),
-                        Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              AppSocialButton(socialType: SocialType.Facebook),
-                              SizedBox(
-                                width: 15.0,
-                              ),
-                              AppSocialButton(
-                                socialType: SocialType.Google,
-                                onPressed: () {},
-                              ),
-                            ],
-                          ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            AppSocialButton(socialType: SocialType.Facebook),
+                            SizedBox(
+                              width: 15.0,
+                            ),
+                            AppSocialButton(
+                              socialType: SocialType.Google,
+                              onPressed: () {},
+                            ),
+                          ],
                         ),
-                        ChangeScreen(
-                          name: 'Sign Up',
-                          whichAccount: 'Don\'t have an account?',
-                          onTap: () {
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => const SignUp()));
-                          },
-                        ),
-                      ]),
-                )
-              ],
-            ),
+                      ),
+                      ChangeScreen(
+                        name: 'Sign Up',
+                        whichAccount: 'Don\'t have an account?',
+                        onTap: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => const SignUp()));
+                        },
+                      ),
+                    ]),
+              )
+            ],
           ),
         ),
       ),

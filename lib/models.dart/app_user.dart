@@ -21,7 +21,7 @@ class AppUser {
       'Email': email,
       'Password': password,
       'Token': token,
-      'Username': username,
+      'firstName': username,
       'favorites': favorites,
       'followList': followList,
       'phoneNumber': phoneNumber,
@@ -32,7 +32,7 @@ class AppUser {
       : email = firestore!['Email'],
         password = firestore['Password'],
         token = firestore['Token'],
-        username = firestore['Username'],
+        username = firestore['firstName'],
         favorites = firestore['favorites'],
         followList = firestore['followList'],
         phoneNumber = firestore['phoneNumer'];

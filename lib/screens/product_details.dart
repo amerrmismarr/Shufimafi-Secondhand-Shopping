@@ -1,12 +1,17 @@
+import 'dart:convert';
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dolabi/screens/home.dart';
 import 'package:dolabi/screens/tabs_with_screens.dart';
 import 'package:dots_indicator/dots_indicator.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:http/http.dart' as http;
+import 'package:uuid/uuid.dart';
 
 class ProductDetails extends StatefulWidget {
   String? image;
@@ -57,6 +62,7 @@ class _ProductDetailsState extends State<ProductDetails> {
               ProductScreenTopPart(
                 image: widget.image,
                 productId: widget.productId,
+                price: widget.price,
               ),
               ProductScreenBottomPart(productId: widget.productId)
             ],
@@ -68,11 +74,12 @@ class _ProductDetailsState extends State<ProductDetails> {
 class ProductScreenTopPart extends StatefulWidget {
   String? image;
   String? productId;
+  String? price;
 
-  ProductScreenTopPart({this.image, this.productId});
+  ProductScreenTopPart({this.image, this.productId, this.price});
   @override
   _ProductScreenTopPartState createState() =>
-      new _ProductScreenTopPartState(image, productId);
+      new _ProductScreenTopPartState(image, productId, price);
 }
 
 double baseHeight = 640.0;
@@ -102,8 +109,49 @@ String desc =
 class _ProductScreenTopPartState extends State<ProductScreenTopPart> {
   String? image;
   String? productId;
+  String? price;
 
-  _ProductScreenTopPartState(this.image, this.productId);
+  Color mainColor = const Color.fromARGB(255, 255, 115, 0);
+
+  _ProductScreenTopPartState(this.image, this.productId, this.price);
+
+  late String notificationId;
+  var uuid = Uuid();
+
+  sendNotification(String title, String token) async {
+    notificationId = uuid.v1();
+    final data = {
+      'click_action': 'FLUTTER_NOTIFICATION_CLICK',
+      'id': notificationId,
+      'status': 'done',
+      'message': title,
+    };
+
+    try {
+      http.Response response =
+          await http.post(Uri.parse('https://fcm.googleapis.com/fcm/send'),
+              headers: <String, String>{
+                'Content-Type': 'application/json',
+                'Authorization':
+                    'key=AAAAHCmmD6I:APA91bFmHloueY2g3dk9qZ7jxx4patrg515GdOwZmY-ZzjoqXi1w3CoiknNx8pcu6NoSP3PesGgtJXwI1-7mQoiM3EcjcmoY43n6VWYgc0OsuZoeohtMxG666FcH0IxZMp1BB2OgqHL8'
+              },
+              body: jsonEncode(<String, dynamic>{
+                'notification': <String, dynamic>{
+                  'title': title,
+                  'body': 'Click to see who!'
+                },
+                'priority': 'high',
+                'data': data,
+                'to': '$token'
+              }));
+
+      if (response.statusCode == 200) {
+        print('Notification sent');
+      } else {
+        print('errorrr');
+      }
+    } catch (e) {}
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -139,52 +187,101 @@ class _ProductScreenTopPartState extends State<ProductScreenTopPart> {
                 itemBuilder: (context, index, int pageViewIndex) {
                   return GestureDetector(
                     onTap: () {},
-                    child: Card(
-                      margin: const EdgeInsets.symmetric(vertical: 0),
-                      child: Container(
-                        width: double.infinity,
-                        height: screenAwareSize(245, context),
-                        decoration: BoxDecoration(
-                            image: DecorationImage(
-                                image: NetworkImage(
-                                    snapshot.data.docs[index]['url']),
-                                fit: BoxFit.fitWidth)),
-                      ),
+                    child: Stack(
+                      children: [
+                        Card(
+                          margin: const EdgeInsets.symmetric(vertical: 0),
+                          child: Container(
+                            width: double.infinity,
+                            height: 600,
+                            decoration: BoxDecoration(
+                                image: DecorationImage(
+                                    image: NetworkImage(
+                                        snapshot.data.docs[index]['url']),
+                                    fit: BoxFit.fitWidth)),
+                          ),
+                        ),
+                      ],
                     ),
                   );
                 },
               );
             }),
-        Column(
-          children: [
-            SizedBox(
-              height: 50,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                IconButton(
-                  color: Colors.white,
-                  icon: Icon(
-                    Icons.arrow_back,
-                    size: screenAwareSize(20.0, context),
+        StreamBuilder<DocumentSnapshot>(
+            stream: FirebaseFirestore.instance
+                .collection('Users')
+                .doc(FirebaseAuth.instance.currentUser!.uid)
+                .snapshots(),
+            builder: (context, AsyncSnapshot firstSnapshot) {
+              if (!firstSnapshot.hasData) {
+                return const CircularProgressIndicator();
+              }
+              List favorites = firstSnapshot.data!.get('favorites');
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  SizedBox(
+                    height: 50,
                   ),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-                IconButton(
-                  icon: Icon(
-                    Icons.favorite_border,
-                    size: screenAwareSize(20.0, context),
-                    color: Colors.white,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      IconButton(
+                        color: mainColor,
+                        icon: Icon(
+                          Icons.arrow_back,
+                          size: screenAwareSize(20.0, context),
+                        ),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                      favorites.contains(productId)
+                          ? IconButton(
+                              icon: Icon(Icons.favorite,
+                                  size: screenAwareSize(20.0, context),
+                                  color: mainColor),
+                              onPressed: () {
+                                FirebaseFirestore.instance
+                                    .collection('Users')
+                                    .doc(FirebaseAuth.instance.currentUser!.uid)
+                                    .set({
+                                  'favorites':
+                                      FieldValue.arrayRemove([productId])
+                                }, SetOptions(merge: true));
+                              },
+                            )
+                          : IconButton(
+                              icon: Icon(Icons.favorite_border,
+                                  size: screenAwareSize(20.0, context),
+                                  color: mainColor),
+                              onPressed: () {
+                                FirebaseFirestore.instance
+                                    .collection('Users')
+                                    .doc(FirebaseAuth.instance.currentUser!.uid)
+                                    .set({
+                                  'favorites':
+                                      FieldValue.arrayUnion([productId])
+                                }, SetOptions(merge: true));
+                                // sendNotification(
+                                //     'Someone likes your product', token);
+                                // FirebaseFirestore.instance
+                                //     .collection('Users')
+                                //     .doc(userId)
+                                //     .collection('Notifications')
+                                //     .doc(notificationId)
+                                //     .set({
+                                //   'title': 'likes your product',
+                                //   'firstName': username,
+                                //   'image': image
+                                // });
+                              },
+                            )
+                    ],
                   ),
-                  onPressed: () {},
-                ),
-              ],
-            ),
-          ],
-        ),
+                ],
+              );
+            }),
       ],
     );
   }
@@ -207,6 +304,8 @@ class _ProductScreenBottomPartState extends State<ProductScreenBottomPart> {
 
   String? productId;
 
+  Color mainColor = const Color.fromARGB(255, 255, 115, 0);
+
   _ProductScreenBottomPartState(this.productId);
 
   void _expand() {
@@ -215,7 +314,52 @@ class _ProductScreenBottomPartState extends State<ProductScreenBottomPart> {
     });
   }
 
-  Widget _buildButton() {
+  _buildPrice(String price) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Center(
+        child: Container(
+          padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+          decoration: BoxDecoration(
+            color: mainColor,
+            borderRadius: BorderRadius.circular(20.0),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                'PRICE',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 1.2,
+                ),
+              ),
+              SizedBox(width: 5.0),
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                child: Text(
+                  '\JOD ${price}',
+                  style: TextStyle(
+                    color: mainColor,
+                    fontSize: 16.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildButton(String phoneNumber) {
     return Container(
       width: double.infinity,
       height: screenAwareSize(120.0, context),
@@ -241,7 +385,7 @@ class _ProductScreenBottomPartState extends State<ProductScreenBottomPart> {
                         vertical: screenAwareSize(14.0, context),
                       ),
                       onPressed: () {
-                        launchUrl(Uri.parse('tel://0799512013'));
+                        launchUrl(Uri.parse('tel://$phoneNumber'));
                       },
                       child: Align(
                         alignment: Alignment.center,
@@ -319,68 +463,82 @@ class _ProductScreenBottomPartState extends State<ProductScreenBottomPart> {
               return CircularProgressIndicator();
             }
             var product = snapshot.data;
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                _buildFeature('Product Category', product['subCategory']),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    children: [
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          "Product Description",
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 20,
-                              fontFamily: "Montserrat-SemiBold"),
-                        ),
-                      ),
+            return StreamBuilder<DocumentSnapshot>(
+                stream: FirebaseFirestore.instance
+                    .collection('Users')
+                    .doc(product['userId'])
+                    .snapshots(),
+                builder: (context, AsyncSnapshot userSnapshot) {
+                  if (!userSnapshot.hasData) {
+                    return CircularProgressIndicator();
+                  }
+                  var user = userSnapshot.data;
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      _buildPrice(product['price'].toString()),
+                      _buildFeature('Product', product['name']),
+                      _buildFeature('Product Owner',
+                          user['firstName'] + ' ' + user['lastName']),
+                      _buildFeature('Product Category', product['subCategory']),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: AnimatedCrossFade(
-                            firstChild: Text(
-                              product['description'],
-                              maxLines: 2,
-                              style: TextStyle(
-                                  color: Colors.grey,
-                                  fontSize: 15,
-                                  fontFamily: "Montserrat-Medium"),
+                        child: Column(
+                          children: [
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                "Product Description",
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 20,
+                                    fontFamily: "Montserrat-SemiBold"),
+                              ),
                             ),
-                            secondChild: Text(
-                              product['description'],
-                              style: TextStyle(
-                                  color: Colors.grey,
-                                  fontSize: screenAwareSize(10.0, context),
-                                  fontFamily: "Montserrat-Medium"),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Align(
+                                alignment: Alignment.centerLeft,
+                                child: AnimatedCrossFade(
+                                  firstChild: Text(
+                                    product['description'],
+                                    maxLines: 2,
+                                    style: TextStyle(
+                                        color: Colors.grey,
+                                        fontSize: 15,
+                                        fontFamily: "Montserrat-Medium"),
+                                  ),
+                                  secondChild: Text(
+                                    product['description'],
+                                    style: TextStyle(
+                                        color: Colors.grey,
+                                        fontSize:
+                                            screenAwareSize(10.0, context),
+                                        fontFamily: "Montserrat-Medium"),
+                                  ),
+                                  crossFadeState: isExpanded
+                                      ? CrossFadeState.showSecond
+                                      : CrossFadeState.showFirst,
+                                  duration: kThemeAnimationDuration,
+                                ),
+                              ),
                             ),
-                            crossFadeState: isExpanded
-                                ? CrossFadeState.showSecond
-                                : CrossFadeState.showFirst,
-                            duration: kThemeAnimationDuration,
-                          ),
+                            GestureDetector(
+                                onTap: _expand,
+                                child: product['description'].length > 100
+                                    ? Text(isExpanded ? "less" : "more..",
+                                        style: TextStyle(
+                                            color: const Color.fromARGB(
+                                                255, 255, 115, 0)))
+                                    : Container()),
+                          ],
                         ),
                       ),
-                      GestureDetector(
-                          onTap: _expand,
-                          child: product['description'].length > 100
-                              ? Text(isExpanded ? "less" : "more..",
-                                  style: TextStyle(
-                                      color: const Color.fromARGB(
-                                          255, 255, 115, 0)))
-                              : Container()),
+                      _buildFeature('Color', product['color']),
+                      _buildButton(user['phoneNumber'])
                     ],
-                  ),
-                ),
-                _buildFeature('Size', 'Size'),
-                _buildFeature('Color', product['color']),
-                _buildFeature('Price', product['price']),
-                _buildButton()
-              ],
-            );
+                  );
+                });
           }),
     );
   }

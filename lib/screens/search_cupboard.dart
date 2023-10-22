@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dolabi/screens/filter.dart';
 import 'package:dolabi/screens/home_logged_in.dart';
 import 'package:dolabi/screens/product_details.dart';
 import 'package:dolabi/screens/search.dart';
@@ -16,16 +15,22 @@ import '../models.dart/product.dart';
 import 'login.dart';
 
 class SearchCupboard extends StatefulWidget {
-  String? searchText;
-  SearchCupboard({this.searchText});
+  String? mainCategory;
+  String? middleCategory;
+  String? subCategory;
+  SearchCupboard({this.mainCategory, this.middleCategory, this.subCategory});
 
   @override
-  State<SearchCupboard> createState() => _SearchCupboardState(this.searchText);
+  State<SearchCupboard> createState() => _SearchCupboardState(
+      this.mainCategory, this.middleCategory, this.subCategory);
 }
 
 class _SearchCupboardState extends State<SearchCupboard> {
-  String? searchText;
-  _SearchCupboardState(this.searchText);
+  String? mainCategory;
+  String? middleCategory;
+  String? subCategory;
+  _SearchCupboardState(
+      this.mainCategory, this.middleCategory, this.subCategory);
   Color mainColor = const Color.fromARGB(255, 255, 115, 0);
 
   String searchingText = ' ';
@@ -54,10 +59,10 @@ class _SearchCupboardState extends State<SearchCupboard> {
 
   @override
   void initState() {
-    if (searchText != null) {
-      _editingController.text = searchText!;
-      searchingText = searchText!;
-    }
+    // if (searchText != null) {
+    //   _editingController.text = searchText!;
+    //   searchingText = searchText!;
+    // }
     super.initState();
   }
 
@@ -347,7 +352,9 @@ class _SearchCupboardState extends State<SearchCupboard> {
                       .map<Product>((doc) => Product(
                           name: doc['name'],
                           description: doc['description'],
-                          category: doc['subCategory'],
+                          mainCategory: doc['mainCategory'],
+                          middleCategory: doc['middleCategory'],
+                          subCategory: doc['subCategory'],
                           color: doc['color'],
                           brand: doc['brand'],
                           condition: doc['condition'],
@@ -359,12 +366,15 @@ class _SearchCupboardState extends State<SearchCupboard> {
                           image: doc['image']))
                       .toList();
 
-                  List<Product> filteredProducts = productsList
-                      .where((product) => (product.category!.toLowerCase())
-                          .startsWith(searchingText.toLowerCase()))
-                      .toList();
+                  List<Product> filteredProducts = [];
 
-                  print(productsList);
+                  productsList.forEach((product) {
+                    if (product.mainCategory! == mainCategory &&
+                        product.middleCategory! == middleCategory &&
+                        product.subCategory! == subCategory) {
+                      filteredProducts.add(product);
+                    }
+                  });
 
                   return filteredProducts.isEmpty &&
                           searchingText != ' ' &&

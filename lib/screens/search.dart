@@ -1,17 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dolabi/screens/home_logged_in.dart';
 import 'package:dolabi/screens/product_details.dart';
 import 'package:dolabi/screens/search_with_filter.dart';
 import 'package:dolabi/screens/tabs_with_screens.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:page_transition/page_transition.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
-
-import '../models.dart/product.dart';
+import 'package:provider/provider.dart';
+import '../services/auth_bloc.dart';
 import 'login.dart';
 
 class Search extends StatefulWidget {
@@ -47,6 +43,104 @@ class _SearchState extends State<Search> {
     'G-2000',
     'G 2000',
     'G2000',
+    'Nike',
+    'Louis Vuitton',
+    'Hermes',
+    'Gucci',
+    'Zalando',
+    'Adidas',
+    'Tiffany & Co.',
+    'H&M',
+    'Cartier',
+    'Lululemon',
+    'Moncler',
+    'Chanel',
+    'Rolex',
+    'Patek Philippe',
+    'Prada',
+    'Uniqlo',
+    'Chow Tai Fook',
+    'Swarovski',
+    'Burberry',
+    'Polo Ralph Lauren',
+    'Tom Ford',
+    'The North Face',
+    'Levi\'s',
+    'Victoria\'s Secret',
+    'Next',
+    'New Balance',
+    'Michael Kors',
+    'Skechers',
+    'TJ Maxx',
+    'ASOS',
+    'Under Armour',
+    'Coach',
+    'Nordstrom',
+    'C&A',
+    'Chopard',
+    'Dolce & Gabbana',
+    'Christian Louboutin',
+    'Omega',
+    'Foot Locker Inc.',
+    'Ray Ban',
+    'Macy\'s',
+    'Asics',
+    'Vera Wang',
+    'Dior',
+    'Puma',
+    'Steve Madden',
+    'Brunello Cucinelli',
+    'American Eagle Outfitters',
+    'Armani',
+    'Nine West',
+    'Fendi',
+    'Urban Outfitters',
+    'Salvatore Ferragamo',
+    'Hugo Boss',
+    'Old Navy',
+    'IWC Schaffhausen',
+    'Primark',
+    'Max Mara',
+    'Manolo Blahnik',
+    'Audemars Piguet',
+    'Diesel',
+    'Calvin Klein',
+    'Net-a-Porter',
+    'Furla',
+    'GAP',
+    'Longines',
+    'Forever 21',
+    'Stuart Weitzman',
+    'Longchamp',
+    'Sisley',
+    'Lao Feng Xiang',
+    'TOD\'s',
+    'Tissot',
+    'Tommy Hilfiger',
+    'Tory Burch',
+    'Lacoste',
+    'Topshop',
+    'G-star',
+    'Oakley',
+    'Cole Haan',
+    'Jimmy Choo',
+    'Valentino',
+    'Elie Taharie',
+    'Jaeger-Le Coultre',
+    'Fossil',
+    'Vacheron Constantin',
+    'Elie Saab',
+    'Patagonia',
+    'Bogner',
+    'New Look',
+    'Breguet',
+    'ESCADA',
+    'Tag Heuer',
+    'Banana Republic',
+    'Desigual',
+    'Swatch',
+    'Cavalli',
+    'Ted Baker'
   ];
 
   List<String> filteredList = [];
@@ -92,6 +186,40 @@ class _SearchState extends State<Search> {
                   child: Image(
                       color: mainColor, image: AssetImage('images/$image'))),
             ),
+          ),
+          const SizedBox(
+            width: 15,
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget _buildBrand(String image, String searchText, Color color) {
+    return GestureDetector(
+      onTap: () {
+        PersistentNavBarNavigator.pushNewScreen(
+          context,
+          screen: SearchWithFilter(
+            searchText: searchText,
+          ),
+          withNavBar: false,
+          pageTransitionAnimation: PageTransitionAnimation.slideUp,
+        );
+      },
+      child: Row(
+        children: [
+          Container(
+            height: 100,
+            width: 60,
+            decoration: BoxDecoration(
+                borderRadius: const BorderRadius.all(Radius.circular(100.0)),
+                border: Border.all(
+                  color: mainColor,
+                  width: 2.0,
+                ),
+                image: DecorationImage(
+                    image: AssetImage('images/$image'), fit: BoxFit.fill)),
           ),
           const SizedBox(
             width: 15,
@@ -201,6 +329,7 @@ class _SearchState extends State<Search> {
 
   @override
   Widget build(BuildContext context) {
+    var authBloc = Provider.of<AuthBloc>(context);
     Color mainColor = const Color.fromARGB(255, 255, 115, 0);
     return Scaffold(
       appBar: AppBar(
@@ -293,21 +422,72 @@ class _SearchState extends State<Search> {
               ? CustomSliver(
                   child: Container(
                     height: 60,
-                    child:
-                        ListView(scrollDirection: Axis.horizontal, children: <
-                            Widget>[
-                      _buildCategory('dress_icon.png', 'Perfume', Colors.white),
-                      _buildCategory('shoes_icon.png', 'Orange', Colors.white),
-                      _buildCategory('tie_icon.png', 'Ties', Colors.white),
-                      _buildCategory('shirt.png', 'T-Shirts', Colors.white),
-                      _buildCategory('watch_icon.png', 'Watches', Colors.white),
-                      _buildCategory('shirt.png', 'Watches', Colors.white),
-                      _buildCategory('watch_icon.png', 'Watches', Colors.white),
-                      _buildCategory('shirt.png', 'Watches', Colors.white),
-                      _buildCategory('watch_icon.png', 'Watches', Colors.white),
-                      _buildCategory('shirt.png', 'Watches', Colors.white),
-                      _buildCategory('watch_icon.png', 'Watches', Colors.white),
-                    ]),
+                    child: ListView(
+                        scrollDirection: Axis.horizontal,
+                        children: <Widget>[
+                          _buildCategory(
+                              'dress_icon.png', 'Women', Colors.white),
+                          _buildCategory(
+                              'shoes_icon.png', 'Kids', Colors.white),
+                          _buildCategory('tie_icon.png', 'Men', Colors.white),
+                          _buildCategory(
+                              'cats_and_dogs_icon.png', 'Pets', Colors.white),
+                          _buildCategory(
+                              'books_icon.png', 'Books', Colors.white),
+                          _buildCategory(
+                              'household_icon.png', 'Household', Colors.white),
+                          _buildCategory('electronics_icon.png', 'Electronics',
+                              Colors.white),
+                        ]),
+                  ),
+                )
+              : CustomSliver(child: SizedBox(height: 30)),
+          searchingText == ' ' || searchingText == null || searchingText == ''
+              ? CustomSliver(
+                  child: Column(
+                    children: [
+                      Container(
+                        height: 70,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: const <Widget>[
+                            Text(
+                              'Special brands for you',
+                              style: TextStyle(
+                                  fontSize: 17, fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+              : CustomSliver(child: SizedBox(height: 30)),
+          searchingText == ' ' || searchingText == null || searchingText == ''
+              ? CustomSliver(
+                  child: Container(
+                    height: 60,
+                    child: ListView(
+                        scrollDirection: Axis.horizontal,
+                        children: <Widget>[
+                          _buildBrand('adidas.jpg', 'Adidas', Colors.white),
+                          _buildBrand('zara.jpg', 'Zara', Colors.white),
+                          _buildBrand('koton.png', 'Koton', Colors.white),
+                          _buildBrand('massimu_dutti.jpg', 'Massimu Dutti',
+                              Colors.white),
+                          _buildBrand(
+                              'lc_wakiki.jpeg', 'LC Wakiki', Colors.white),
+                          _buildBrand('mango.jpg', 'Mango', Colors.white),
+                          _buildBrand('apple.jpg', 'Apple', Colors.white),
+                          _buildBrand(
+                              'pull&bear.jpg', 'Pull&Bear', Colors.white),
+                          _buildBrand('h&m.png', 'H&M', Colors.white),
+                          _buildBrand('tommy_hilfiger.jpg', 'Tommy Hilfiger',
+                              Colors.white),
+                          _buildBrand('penti.png', 'Penti', Colors.white),
+                          _buildBrand('uspolo.png', 'US Polo', Colors.white),
+                          _buildBrand('nike.jpg', 'Nike', Colors.white),
+                        ]),
                   ),
                 )
               : SliverList(

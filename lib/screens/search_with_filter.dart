@@ -1,14 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dolabi/screens/filter.dart';
-import 'package:dolabi/screens/home_logged_in.dart';
 import 'package:dolabi/screens/product_details.dart';
 import 'package:dolabi/screens/search.dart';
-import 'package:dolabi/screens/tabs_with_screens.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 
@@ -275,64 +270,64 @@ class _SearchWithFilterState extends State<SearchWithFilter> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Divider(
-              color: mainColor,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Container(
-                  width: 200,
-                  child: Center(
-                    child: Row(
-                      children: [
-                        IconButton(
-                          onPressed: () {},
-                          icon: Icon(
-                            Icons.sort,
-                            color: mainColor,
-                          ),
-                        ),
-                        Text('Sort')
-                      ],
-                    ),
-                  ),
-                ),
-                Container(
-                  color: mainColor,
-                  height: 50,
-                  width: 1,
-                ),
-                Container(
-                  width: 200,
-                  child: Center(
-                    child: Row(
-                      children: [
-                        IconButton(
-                          onPressed: () {
-                            PersistentNavBarNavigator.pushNewScreen(
-                              context,
-                              screen: Login(),
-                              withNavBar: true,
-                              pageTransitionAnimation:
-                                  PageTransitionAnimation.slideUp,
-                            );
-                          },
-                          icon: Icon(
-                            Icons.filter_list,
-                            color: mainColor,
-                          ),
-                        ),
-                        Text('Filter')
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            Divider(
-              color: mainColor,
-            ),
+            // Divider(
+            //   color: mainColor,
+            // ),
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //   children: [
+            //     Container(
+            //       width: 200,
+            //       child: Center(
+            //         child: Row(
+            //           children: [
+            //             IconButton(
+            //               onPressed: () {},
+            //               icon: Icon(
+            //                 Icons.sort,
+            //                 color: mainColor,
+            //               ),
+            //             ),
+            //             Text('Sort')
+            //           ],
+            //         ),
+            //       ),
+            //     ),
+            //     Container(
+            //       color: mainColor,
+            //       height: 50,
+            //       width: 1,
+            //     ),
+            //     Container(
+            //       width: 200,
+            //       child: Center(
+            //         child: Row(
+            //           children: [
+            //             IconButton(
+            //               onPressed: () {
+            //                 PersistentNavBarNavigator.pushNewScreen(
+            //                   context,
+            //                   screen: Login(),
+            //                   withNavBar: true,
+            //                   pageTransitionAnimation:
+            //                       PageTransitionAnimation.slideUp,
+            //                 );
+            //               },
+            //               icon: Icon(
+            //                 Icons.filter_list,
+            //                 color: mainColor,
+            //               ),
+            //             ),
+            //             Text('Filter')
+            //           ],
+            //         ),
+            //       ),
+            //     ),
+            //   ],
+            // ),
+            // Divider(
+            //   color: mainColor,
+            // ),
             Container(
               margin: EdgeInsets.fromLTRB(20, 0, 20, 0),
               child: StreamBuilder(
@@ -348,7 +343,9 @@ class _SearchWithFilterState extends State<SearchWithFilter> {
                       .map<Product>((doc) => Product(
                           name: doc['name'],
                           description: doc['description'],
-                          category: doc['subCategory'],
+                          mainCategory: doc['mainCategory'],
+                          middleCategory: doc['middleCategory'],
+                          subCategory: doc['subCategory'],
                           color: doc['color'],
                           brand: doc['brand'],
                           condition: doc['condition'],
@@ -366,7 +363,10 @@ class _SearchWithFilterState extends State<SearchWithFilter> {
                     if (product.brand!
                             .toLowerCase()
                             .startsWith(searchingText.toLowerCase()) ||
-                        product.category!
+                        product.mainCategory!
+                            .toLowerCase()
+                            .startsWith(searchingText.toLowerCase()) ||
+                        product.subCategory!
                             .toLowerCase()
                             .startsWith(searchingText.toLowerCase()) ||
                         product.name!

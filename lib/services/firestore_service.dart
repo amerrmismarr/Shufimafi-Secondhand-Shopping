@@ -77,7 +77,7 @@ class FireStoreService {
     var product = Product(
         name: name,
         description: description,
-        category: category,
+        mainCategory: category,
         brand: brand,
         condition: condition,
         color: color,

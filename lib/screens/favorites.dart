@@ -1,17 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dolabi/main.dart';
-import 'package:dolabi/screens/home.dart';
 import 'package:dolabi/screens/login.dart';
 import 'package:dolabi/screens/product_details.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
-import 'package:provider/provider.dart';
-
-import '../models.dart/app_user.dart';
 
 class Favorites extends StatefulWidget {
   const Favorites({Key? key}) : super(key: key);
@@ -21,16 +14,10 @@ class Favorites extends StatefulWidget {
 }
 
 class _FavoritesState extends State<Favorites> {
-  bool _expanded = false;
-
-  Home home = Home();
-
   Color mainColor = const Color.fromARGB(255, 255, 115, 0);
 
   @override
   Widget build(BuildContext context) {
-    //  final appUser = Provider.of<AppUser>(context);
-    var isLoggedIn = Provider.of<bool>(context);
     return Scaffold(
         backgroundColor: Colors.white,
         body: StreamBuilder<User?>(
@@ -72,7 +59,8 @@ class _FavoritesLoggedInState extends State<FavoritesLoggedIn> {
                   height: 200,
                   width: 160,
                   decoration: BoxDecoration(
-                      image: DecorationImage(image: NetworkImage(image))),
+                      image: DecorationImage(
+                          fit: BoxFit.cover, image: NetworkImage(image))),
                 ),
               ),
               const SizedBox(
@@ -176,13 +164,20 @@ class _FavoritesLoggedInState extends State<FavoritesLoggedIn> {
                     child: StreamBuilder(
                       stream: FirebaseFirestore.instance
                           .collection('Products')
-                          .where('productId', whereIn: favorites)
                           .snapshots(),
                       builder: (context, AsyncSnapshot snapshot) {
                         if (!snapshot.hasData) {
                           return const CircularProgressIndicator();
                         }
-                        var products = snapshot.data.docs;
+                        List products = snapshot.data.docs;
+                        List favoriteProducts = [];
+                        for (var product in products) {
+                          for (var favorite in favorites) {
+                            if (product['productId'] == favorite) {
+                              favoriteProducts.add(product);
+                            }
+                          }
+                        }
                         return GridView.builder(
                           shrinkWrap: true,
                           //     physics: NeverScrollableScrollPhysics(),
@@ -191,7 +186,7 @@ class _FavoritesLoggedInState extends State<FavoritesLoggedIn> {
                                   childAspectRatio: 0.64,
                                   crossAxisSpacing: 3,
                                   crossAxisCount: 2),
-                          itemCount: products.length,
+                          itemCount: favoriteProducts.length,
                           itemBuilder: (context, index) {
                             return GestureDetector(
                               onTap: () {
@@ -200,19 +195,13 @@ class _FavoritesLoggedInState extends State<FavoritesLoggedIn> {
                                     PageTransition(
                                         duration: Duration(milliseconds: 1000),
                                         type: PageTransitionType.fade,
-                                        child: ProductDetails(
-                                          image: products[index]['image'],
-                                          name: products[index]['name'],
-                                          price: '1999',
-                                          productId: products[index]
-                                              ['productId'],
-                                        )));
+                                        child: ProductDetails()));
                               },
                               child: _buildFeaturedProduct(
-                                  products[index]['brand'],
-                                  '1000',
-                                  products[index]['image'],
-                                  products[index]['productId'],
+                                  favoriteProducts[index]['brand'],
+                                  favoriteProducts[index]['price'],
+                                  favoriteProducts[index]['image'],
+                                  favoriteProducts[index]['productId'],
                                   favorites),
                             );
                           },
